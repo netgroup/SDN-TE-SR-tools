@@ -1,0 +1,8 @@
+#Compiled Source#
+
+############
+
+*.out
+*.pyc
+*.dot
+*.json
