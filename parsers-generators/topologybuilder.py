@@ -5,6 +5,7 @@ import sys
 from pprint import pprint
 import json
 import networkx as nx
+import siphash
 
 class TopologyBuilderFactory:
 
@@ -27,6 +28,8 @@ class TopologyBuilder:
 		self.ports = {}
 		self.nx_topology = None
 		self.max_capacity = 0.0
+		key = '0123456789ABCDEF'
+		self.sip = siphash.SipHash_2_4(key)
 
 	def ctrl_topoPrint(self):
 		print json.dumps(self.topology, sort_keys=True, indent=4)
@@ -38,6 +41,9 @@ class TopologyBuilder:
 			print self.nx_topology.edges(data=True)
 
 	def parseJsonToNx(self):
+		raise NotImplementedError("Abstract Method")
+
+	def serialize(self):
 		raise NotImplementedError("Abstract Method")
 
 # XXX Out of date
@@ -75,11 +81,7 @@ class RyuTopologyBuilder(TopologyBuilder):
 				self.nx_topology = nx.MultiDiGraph()
 				self.nx_topology.clear()
 
-				for dpid, ports in self.ports.iteritems():
-					if dpid not in self.nodes:
-						self.nodes.append(hex(int(dpid)))
-
-				self.nx_topology.add_nodes_from(self.nodes)
+				index = 0
 
 				for link in self.topology:
 					src = link['src']['dpid']
@@ -119,8 +121,30 @@ class RyuTopologyBuilder(TopologyBuilder):
 					if capacity >= self.max_capacity:
 						self.max_capacity = capacity		
 
-					self.nx_topology.add_edge(src, dst, capacity=capacity, allocated=0.0, src_port=src_port, dst_port=dst_port, src_port_no=src_port_no, dst_port_no=dst_port_no, src_mac=src_mac, dst_mac=dst_mac, flows=[]) 
+					self.sip.update(str(index))
+					id_ = str(self.sip.hash())
+
+					self.nx_topology.add_edge(src, dst, capacity=capacity, allocated=0.0, src_port=src_port, dst_port=dst_port, src_port_no=src_port_no, dst_port_no=dst_port_no, src_mac=src_mac, dst_mac=dst_mac, flows=[], id=id_) 
+
+					index = index + 1
 
 			else:
 				print "Error something does not work"
 				sys.exit(-2)
+
+	def serialize(self):
+
+		with open('links.json', 'w') as outfile:
+			json.dump(self.nx_topology.edges(data=True), outfile, indent=4, sort_keys=True)
+			outfile.close()
+
+		with open('nodes.json', 'w') as outfile:
+			json.dump(self.nx_topology.nodes(data=True), outfile, indent=4, sort_keys=True)
+			outfile.close()		
+		
+
+
+
+
+
+
