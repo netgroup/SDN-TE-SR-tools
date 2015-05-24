@@ -1,3 +1,7 @@
+#########################
+# Graphml2nx.py
+#########################
+
 import os
 import json
 import sys
@@ -11,7 +15,12 @@ import xml.etree.ElementTree as ET
 import re
 import numpy as np
 from distribuzioni import *
-#from ZooToNx import *
+
+NODE_TYPE_KEY = 'node-type' #old version
+#NODE_TYPE_KEY = 'type'     #new version
+
+LINK_TYPE_KEY = 'link-type' #old version
+#LINK_TYPE_KEY = 'view'     #new version
 
 # L average length in bit
 L = 1000
@@ -20,13 +29,18 @@ S = 1000
 DEFAULT_LINK_CAPA = 60
 PERCENTAGE_NODES_CORE = 0.2
 
+
+
 pusher_cfg = {}
 
 
-def parse_graphml(input_file_name, nx_links, nx_nodes, defa_node_type="OSHI-CR", defa_link_type="core"):
+
+
+# operates on the topology object nx_topology_new passed by reference
+def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link_type=""):
 
 	if input_file_name == 'None':
-	    sys.exit('\n\tNo input file was specified as argument....!')
+	   sys.exit('\n\tNo input file was specified as argument....!')
 
 	xml_tree = ET.parse(input_file_name)
 
@@ -73,7 +87,6 @@ def parse_graphml(input_file_name, nx_links, nx_nodes, defa_node_type="OSHI-CR",
 			node_speed_link_in_graphml = i.attrib['id']   #d39
 
 
-
 	#Entra in ogni nodo del file xml 		
 	for n in node_set:
 
@@ -95,7 +108,7 @@ def parse_graphml(input_file_name, nx_links, nx_nodes, defa_node_type="OSHI-CR",
 				#prende l'id del nodo
 				node_id_value = re.sub(r'\s+', '', d.text)		
 
-		nx_nodes.add_node(node_id_value, city = node_name_value, country = node_country_value, type_node = "core" )
+				
         	
 
         #save id:data couple
@@ -103,13 +116,15 @@ def parse_graphml(input_file_name, nx_links, nx_nodes, defa_node_type="OSHI-CR",
 		id_node_country_dict[node_index_value] = node_country_value
 		id_node_id_dict[node_index_value] = int(node_id_value)
 		
-	
-	
-		
+
+			
 	for i in range(0, len(id_node_city_dict)):
 		#Aggiungo i link nella lista 
-		
-		
+		nx_topology_new.add_node(int(id_node_id_dict[str(i)]))
+		nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]=defa_node_type
+
+		#print "===========", nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]
+
 		print 'node City = '+id_node_city_dict[str(i)]+" Country = "+ id_node_country_dict[str(i)]+" id = "+str(id_node_id_dict[str(i)])
 		
 	print "\n"
@@ -140,22 +155,42 @@ def parse_graphml(input_file_name, nx_links, nx_nodes, defa_node_type="OSHI-CR",
 		print "Link tra "+str(id_node_id_dict[src_id])+" e "+str(id_node_id_dict[dst_id])+" con capacita': "+str(id_node_link_speed_dict[i])
 
 		#Carico il link 
-		nx_links.add_edge(int(id_node_id_dict[src_id]),int(id_node_id_dict[dst_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type='core' ,flows=[])
+		src_index= int(id_node_id_dict[src_id])
+		dst_index= int(id_node_id_dict[dst_id])
+
+		unique_key = get_id()
 		
+		#nx_topology_new.add_edge(src_index,dst_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type=defa_link_type ,flows=[])
+		nx_topology_new.add_edge(src_index,dst_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0 ,flows=[])
+		#nx_topology_new.add_edge(src_index,dst_index) 
+		#print "eccooooo", nx_topology_new.edges(data=True)
+		#nx_topology_new.edge[src_index][dst_index]['capacity'] = round(float(id_node_link_speed_dict[i]))
+		#nx_topology_new.edge[src_index][dst_index]['allocated'] = 0
+		nx_topology_new.edge[src_index][dst_index][unique_key][LINK_TYPE_KEY] = defa_link_type
+		#nx_topology_new.edge[src_index][dst_index]['flows'] = []
+
+		unique_key = get_id()
 		#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI CORE        
-		nx_links.add_edge(int(id_node_id_dict[dst_id]),int(id_node_id_dict[src_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type='core' ,flows=[])
+		#nx_topology_new.add_edge(dst_index,src_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type=defa_link_type ,flows=[])
+		nx_topology_new.add_edge(dst_index,src_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, flows=[])
+		#nx_topology_new.add_edge(dst_index,src_index) 
+		#nx_topology_new.edge[dst_index][src_index]['capacity'] = round(float(id_node_link_speed_dict[i]))
+		#nx_topology_new.edge[dst_index][src_index]['allocated'] = 0
+		nx_topology_new.edge[dst_index][src_index][unique_key][LINK_TYPE_KEY] = defa_link_type
+		#nx_topology_new.edge[dst_index][src_index]['flows'] = []
 
 		i=i+1
 
-	
-#it adds edge nodes to the nx_links object
-def add_edge_nodes(nx_links, nx_nodes):
 
-	
-	out_file= open("nodi.txt","w")
-	
+
+	#return is not needed as the function operates on the topology object passed by reference
+
+
+#it adds edge nodes to the nx_topology_new object
+def add_edge_nodes(nx_topology_new):
+
 	global n_nodi_core
-	n_nodi_core = nx_links.number_of_nodes()
+	n_nodi_core = nx_topology_new.number_of_nodes()
 
 
 	global n_nodi_di_bordo	
@@ -164,20 +199,20 @@ def add_edge_nodes(nx_links, nx_nodes):
 
 	random.seed(10)        #generatore casuale con seme per rendere ripetibile la topologia, viene usato per decidere i collegamenti dei nodi di bordo
 
-	
 	for i in range(0,n_nodi_di_bordo):
 		dst= random.randrange(0,n_nodi_core-1,1)
-
-		#node_name_value = nx_nodes.node[1]
-		#node_country_value = nx_nodes.node[dst]
-
-		#GENERA I NODI DI BORDO
-		nx_nodes.add_node(n_nodi_core+i, city = '', country = '', type_node = "bordo")
-
 		#GENERA COLLEGAMENTI TRA NODI DI BORDO E I NODI CORE SCELTI RANDOM
-		nx_links.add_edge(n_nodi_core+i, dst, capacity = int(random.uniform(50,200)), allocated=0, type='bordo-core' ,flows=[])
+		nx_topology_new.add_edge(n_nodi_core+i, dst, capacity = int(random.uniform(50,200)), allocated=0, type='bordo-core' ,flows=[])
 		
 		#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI DI BORDO 
-		nx_links.add_edge(dst, n_nodi_core+i, capacity = int(random.uniform(50,200)), allocated=0, type='core-bordo' ,flows=[])
+		nx_topology_new.add_edge(dst, n_nodi_core+i, capacity = int(random.uniform(50,200)), allocated=0, type='core-bordo' ,flows=[])		
 
-	out_file.write(str(list(nx_nodes.nodes_iter(data = True))))
+	#return is not needed as the function operates on the topology object passed by reference
+
+def get_id():
+	#TODO it could be possible to replace with sip
+	if not hasattr(get_id, "counter"):
+		get_id.counter = -1  # it doesn't exist yet, so initialize it
+	get_id.counter += 1
+	return str(get_id.counter)
+
