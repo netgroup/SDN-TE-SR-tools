@@ -46,7 +46,7 @@ from timer_shortestpath import *
 from timer_cspf_euristico import *
 from timer_cspf import *
 from Graphml2nx import *
-from NxToJson import * 
+from Nx2json import * 
 
 
 
@@ -318,9 +318,9 @@ def simulate_flow_allocator(nx_topology):
 	# Transforms flow_catalogue in a nx multidigraph
 	nx_flows = multidigraph_from_flow_catalogue(flow_catalogue_new)       #flow_catalogue
 
-	nx_topology_Json_Serialization(nx_topology)	
+	nx_topology_Json_Serialization(nx_topology, "Links.json")	
 
-	flow_Catalogue_Json_Serialization(flow_catalogue_new)
+	flow_Catalogue_Json_Serialization(flow_catalogue_new, 'flow_catalogue.json')
 
 
 	nx_topology_sp = nx_topology.copy()
