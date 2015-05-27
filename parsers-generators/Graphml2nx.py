@@ -136,10 +136,10 @@ def parse_graphml(input_file_name, nx_topology, defa_node_type="OSHI-CR", defa_l
 		#print "Link tra "+str(id_node_id_dict[src_id])+" e "+str(id_node_id_dict[dst_id])+" con capacita': "+str(id_node_link_speed_dict[i])
 
 		#Carico il link 
-		nx_topology.add_edge(int(id_node_id_dict[src_id]),int(id_node_id_dict[dst_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type='core' ,flows=[])
+		nx_topology.add_edge(int(id_node_id_dict[src_id]),int(id_node_id_dict[dst_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, flows=[])
 		
 		#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI CORE        
-		nx_topology.add_edge(int(id_node_id_dict[dst_id]),int(id_node_id_dict[src_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type='core' ,flows=[])
+		nx_topology.add_edge(int(id_node_id_dict[dst_id]),int(id_node_id_dict[src_id]), capacity = round(float(id_node_link_speed_dict[i])), allocated=0, flows=[])
 
 		i=i+1
 
