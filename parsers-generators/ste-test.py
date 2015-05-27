@@ -30,6 +30,7 @@
 
 import os
 import json
+import inspect
 import sys
 import networkx as nx
 import copy
@@ -47,6 +48,7 @@ from timer_cspf_euristico import *
 from timer_cspf import *
 from Graphml2nx_ste import * 
 from Nx2t3d import *
+from Nx2json import *
 
 
 CONFIDENCE = 5
@@ -200,14 +202,29 @@ def flow_allocator(ctrl_endpoint):
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
+def serialize(nx_topology_new):
+
+	with open('links.json', 'w') as outfile:
+		json.dump(nx_topology_new.edges(data=True), outfile, indent=4, sort_keys=True)
+		outfile.close()
+
+	with open('nodes.json', 'w') as outfile:
+		json.dump(nx_topology_new.nodes(data=True), outfile, indent=4, sort_keys=True)
+		outfile.close()	
+
 def print_links(nx_topology_new):
 
 	print "link list"
 	print(list(nx_topology_new.edges_iter(data=True)))
 	print json.dumps(list(nx_topology_new.edges_iter(data=True)))
+	print_info (nx_topology_new)
+	print "#####################################################"
+
+def print_info(nx_topology_new):
+
 	print "num of nodes", nx_topology_new.number_of_nodes()
 	print "num of edges", nx_topology_new.number_of_edges()
-	print "#####################################################"
+
 
 
 def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
@@ -218,13 +235,29 @@ def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 
 def run_command(args_in):
 	nx_topology_new = nx.MultiDiGraph()
-	parse_graphml(nx_topology_new, args_in.file, defa_node_type="OSHI-CR", defa_link_type="Data")
+
+
+	if args_in.file_type_in=='graphml':
+
+		#print inspect.getfile(parse_graphml)
+		
+		parse_graphml(nx_topology_new, args_in.file, defa_node_type="OSHI-CR", defa_link_type="Data")
+		print_info(nx_topology_new)
+		serialize(nx_topology_new)
 	
+
+	if args_in.file_type_in=='t3d':
+		t3d_json_2_nx(nx_topology_new, args_in.file)
+
+
 	#print_links(nx_topology_new)
 	
-	nx_2_t3d_json(nx_topology_new, 'out.t3d')
+	if args_in.file_type_out=='t3d':
+		nx_2_t3d_json(nx_topology_new, 'out.t3d')
 
-	t3d_json_2_nx(nx_topology_new, 'out.t3d')
+
+
+	#t3d_json_2_nx(nx_topology_new, 'out.t3d')
 
 
 	#add_edge_nodes (nx_topology_new)
@@ -235,12 +268,16 @@ def run_command(args_in):
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description='Flow Allocator')
 	parser.add_argument('--controller', dest='controllerRestIp', action='store', default='localhost:8080', help='controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
-	parser.add_argument('--f', dest='file', action='store', help='file graphml to parse')
+	parser.add_argument('--f', dest='file', action='store', help='input file to parse')
+	parser.add_argument('--in', dest='file_type_in', action='store', default='graphml', help='type of input file, default = graphml, options = t3d')
+	parser.add_argument('--out', dest='file_type_out', action='store', default='t3d', help='type of output file, default = t3d, options = nx')
+
 	args = parser.parse_args()    
 	if len(sys.argv)==1:
 		parser.print_help()
 		sys.exit(1)    
 	return args
+
 	
 if __name__ == '__main__':
 	args = parse_cmd_line()

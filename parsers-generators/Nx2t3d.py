@@ -11,17 +11,17 @@ import re
 import siphash
 
 
-VERTEX_INFO_KEY='vertex_info' #old version
-#VERTEX_INFO_KEY='info'        #new version
+#VERTEX_INFO_KEY='vertex_info' #old version
+VERTEX_INFO_KEY='info'        #new version
 
-LINK_ID_KEY = 'link_label'  #old version
-#LINK_ID_KEY = 'id'          #new version
+#LINK_ID_KEY = 'link_label'  #old version
+LINK_ID_KEY = 'id'          #new version
 
-LINK_TYPE_KEY = 'link-type' #old version
-#LINK_TYPE_KEY = 'view'     #new version
+#LINK_TYPE_KEY = 'link-type' #old version
+LINK_TYPE_KEY = 'view'     #new version
 
-NODE_TYPE_KEY = 'node-type' #old version
-#NODE_TYPE_KEY = 'type'     #new version
+#NODE_TYPE_KEY = 'node-type' #old version
+NODE_TYPE_KEY = 'type'     #new version
 
 
 # converts from a Networkx multidigraph into a T3D JSON file
@@ -36,27 +36,28 @@ def nx_2_t3d_dict(nx_topology_new, defa_node_type="", defa_link_type="", add_lin
 	nodes_dict = {}
 	#all node attributes in Networkx graph are copied in the [VERTEX_INFO_KEY][property]
 	for n,d in nx_topology_new.nodes_iter(data=True):
-		print "!!!!node", n
-		print "!!!!dictionary", d
+		#print "!!!!node", n
+		#print "!!!!dictionary", d
 		if NODE_TYPE_KEY not in d and defa_node_type!="":
 			d[NODE_TYPE_KEY]= defa_node_type
 		nodes_dict[str(n)]={}
 		nodes_dict[str(n)][VERTEX_INFO_KEY]={}
 		nodes_dict[str(n)][VERTEX_INFO_KEY]['property']={}
 
-		if NODE_TYPE_KEY in nodes_dict:
+		if NODE_TYPE_KEY in d:
+			#nodes_dict[str(n)][VERTEX_INFO_KEY][NODE_TYPE_KEY]=d[NODE_TYPE_KEY]
 			nodes_dict[str(n)][VERTEX_INFO_KEY][NODE_TYPE_KEY]=d[NODE_TYPE_KEY]
-			del nodes_dict[NODE_TYPE_KEY]
+			del d[NODE_TYPE_KEY]
 		for key_dict in d:
-			print "key_dict", key_dict
+			#print "key_dict", key_dict
 			nodes_dict[str(n)][VERTEX_INFO_KEY]['property'][key_dict]=d[key_dict]
 	
-	print "!!!!nodes_dict", nodes_dict
+	#print "!!!!nodes_dict", nodes_dict
 	
 	edges_dict = {}
 	for source,dest,key,d in nx_topology_new.edges_iter(data=True,keys=True):
-		print "!!!!!source", source, " !!!!!dest", dest
-		print "!!!!edge dictionary", d
+		#print "!!!!!source", source, " !!!!!dest", dest
+		#print "!!!!edge dictionary", d
 		edge_str_id = str(source)+"&&"+str(dest) 
 		if edge_str_id not in edges_dict:
 			edges_dict[edge_str_id]={}
@@ -77,7 +78,7 @@ def nx_2_t3d_dict(nx_topology_new, defa_node_type="", defa_link_type="", add_lin
 		#	link_dict['allocated']=d['allocated']
 		#	del d['allocated']
 		edges_dict[edge_str_id]['links'].append (link_dict)
-	print "!!!!edges_dict", edges_dict
+	#print "!!!!edges_dict", edges_dict
 
 	topo_dict= dict ([("edges",edges_dict),("vertices",nodes_dict)])
 	return topo_dict

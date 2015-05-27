@@ -16,11 +16,11 @@ import re
 import numpy as np
 from distribuzioni import *
 
-NODE_TYPE_KEY = 'node-type' #old version
-#NODE_TYPE_KEY = 'type'     #new version
+#NODE_TYPE_KEY = 'node-type' #old version
+NODE_TYPE_KEY = 'type'     #new version
 
-LINK_TYPE_KEY = 'link-type' #old version
-#LINK_TYPE_KEY = 'view'     #new version
+#LINK_TYPE_KEY = 'link-type' #old version
+LINK_TYPE_KEY = 'view'     #new version
 
 # L average length in bit
 L = 1000
@@ -125,7 +125,7 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 
 		#print "===========", nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]
 
-		print 'node City = '+id_node_city_dict[str(i)]+" Country = "+ id_node_country_dict[str(i)]+" id = "+str(id_node_id_dict[str(i)])
+		#print 'node City = '+id_node_city_dict[str(i)]+" Country = "+ id_node_country_dict[str(i)]+" id = "+str(id_node_id_dict[str(i)])
 		
 	print "\n"
 
@@ -152,7 +152,7 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 		src_id = e.attrib['source']
 		dst_id = e.attrib['target']
 		
-		print "Link tra "+str(id_node_id_dict[src_id])+" e "+str(id_node_id_dict[dst_id])+" con capacita': "+str(id_node_link_speed_dict[i])
+		#print "Link tra "+str(id_node_id_dict[src_id])+" e "+str(id_node_id_dict[dst_id])+" con capacita': "+str(id_node_link_speed_dict[i])
 
 		#Carico il link 
 		src_index= int(id_node_id_dict[src_id])
