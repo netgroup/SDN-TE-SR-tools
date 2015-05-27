@@ -2,24 +2,18 @@ from networkx.readwrite import json_graph
 import json
 import copy
 
-"""
-def serialize(self):
-with open('flow_catalogue.json', 'w') as outfile:
-json.dump(self.flow_catalogue, outfile, indent=4, sort_keys=True)
-outfile.close()
-"""
 
 def flow_Catalogue_Json_Serialization(flow_catalogue):
 	with open('flow_catalogue.json', 'w') as outfile:
 		json.dump(flow_catalogue, outfile, indent=4, sort_keys=True)
 	outfile.close()
 
-def nx_links_Json_Serialization(nx_links):
+def nx_topology_Json_Serialization(nx_topology):
 
 	out_file = open("Links.json","w")
 	data = []
 
-	for edge in nx_links.edges_iter(data = True):
+	for edge in nx_topology.edges_iter(data = True):
 		lista = []
 		lista_diz = []
 		diz = {}

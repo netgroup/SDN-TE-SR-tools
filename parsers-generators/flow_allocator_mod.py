@@ -154,11 +154,11 @@ def calculate_l(total_capacity, nx_multidigraph, S):
 
 #Print functions
 """
-print(nx_links.nodes())   # Print nodes of the nx_links
-print(nx_links.edges())   # Print edges of the nx_links
-print(nx_links.edge[1][3][0]['capacity']) # Print the attribute capacity of the link (1,3)
-print(nx_links[1][3])   # Print the map of the link (1,3)
-print(nx_links.edge[2])   # Print the adjancies of the node 2
+print(nx_topology.nodes())   # Print nodes of the nx_topology
+print(nx_topology.edges())   # Print edges of the nx_topology
+print(nx_topology.edge[1][3][0]['capacity']) # Print the attribute capacity of the link (1,3)
+print(nx_topology[1][3])   # Print the map of the link (1,3)
+print(nx_topology.edge[2])   # Print the adjancies of the node 2
 """
 
 # Retrieves the flows from the vll_pusher.cfg and generate the flow_catalogue
@@ -272,37 +272,37 @@ def flow_allocator(ctrl_endpoint):
 	# Retrieves the topology from the CTRL controller and build the networkx topology
 	topobuilder.parseJsonToNx()
 	flow_catalogue = retrieve_flows(ctrl_endpoint)
-	nx_links = topobuilder.nx_links
+	nx_topology = topobuilder.nx_topology
 	print('\nnx_multidigraph edges')
-	print(list(nx_links.edges_iter(data=True)))
+	print(list(nx_topology.edges_iter(data=True)))
 	print "#############################################################", "\n"
 	BIGK = topobuilder.max_capacity
 
 	
 	# Assign the weights
-	set_weights_on_available_capa(BIGK, nx_links)
+	set_weights_on_available_capa(BIGK, nx_topology)
 
 	# Transforms flow_catalogue in a nx multidigraph
 	nx_flows = multidigraph_from_flow_catalogue(flow_catalogue)
 
 	# Assigns the flows
-	flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK)
+	flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK)
 
 	# Pushes the flows
-	flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint)
+	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
-def simulate_flow_allocator(nx_links):
+def simulate_flow_allocator(nx_topology):
 
 
 	# BIGK is the max available capacity
 	BIGK = 0
-	for edge in nx_links.edges_iter(data = True):   
+	for edge in nx_topology.edges_iter(data = True):   
 		if edge[2]['capacity'] > BIGK:    
 			BIGK = edge[2]['capacity']
 
 
-	nx.write_dot(nx_links,'multi.dot')
+	nx.write_dot(nx_topology,'multi.dot')
 	#dot -Tpng multi.dot > multi.png            PER STAMPARE LA MAPPA DELLA RETE
 	
 
@@ -310,22 +310,22 @@ def simulate_flow_allocator(nx_links):
 
 	flows_file=open("flussi.out","w")
 
-	flow_catalogue_new = build_flows(nx_links, flows_file)				# richiama la funzione che genera i flussi 
+	flow_catalogue_new = build_flows(nx_topology, flows_file)				# richiama la funzione che genera i flussi 
 
 	# Assign the weights
-	set_weights_on_available_capa(BIGK, nx_links)  
+	set_weights_on_available_capa(BIGK, nx_topology)  
 	
 	# Transforms flow_catalogue in a nx multidigraph
 	nx_flows = multidigraph_from_flow_catalogue(flow_catalogue_new)       #flow_catalogue
 
-	nx_links_Json_Serialization(nx_links)	
+	nx_topology_Json_Serialization(nx_topology)	
 
 	flow_Catalogue_Json_Serialization(flow_catalogue_new)
 
 
-	nx_links_sp = nx_links.copy()
-	nx_links_cspfe = nx_links.copy()
-	nx_links_cspf = nx_links.copy()
+	nx_topology_sp = nx_topology.copy()
+	nx_topology_cspfe = nx_topology.copy()
+	nx_topology_cspf = nx_topology.copy()
 
 	flow_catalogue_new_sp = flow_catalogue_new.copy()
 	nx_flows_sp = nx_flows.copy()
@@ -338,27 +338,27 @@ def simulate_flow_allocator(nx_links):
 
 	
 	sh_path_file=open("shortest_path.out","w")
-	time_shortestpath(nx_links_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file)                         #timer per algoritmo di shortest path
+	time_shortestpath(nx_topology_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file)                         #timer per algoritmo di shortest path
 	
 	cspf_he_file=open("CSPF_euristico.out","w")
-	time_cspf_heuristic(nx_links_cspfe, flow_catalogue_new_cspfe, nx_flows_cspfe, BIGK, cspf_he_file)         #timer per algoritmo cspf euristico
+	time_cspf_heuristic(nx_topology_cspfe, flow_catalogue_new_cspfe, nx_flows_cspfe, BIGK, cspf_he_file)         #timer per algoritmo cspf euristico
 	
 	cspf_file=open("CSPF.out","w")
-	time_cspf(nx_links_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file)				       #timer per algoritmo cspf					
+	time_cspf(nx_topology_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file)				       #timer per algoritmo cspf					
 	
 
 	
 	# Assigns the flows
-	flow_assignment(nx_links, flow_catalogue_new, nx_flows, BIGK)       
+	flow_assignment(nx_topology, flow_catalogue_new, nx_flows, BIGK)       
 
 
-def flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK):
+def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 
 	# CSPF phase	
 	for flow_id, (src, dst, flow_dict) in flow_catalogue.iteritems():
 		
 		if 'out' in flow_dict and 'size' in flow_dict['out']:
-			work_nx_multidigraph = nx_links.copy()   # Create a working copy
+			work_nx_multidigraph = nx_topology.copy()   # Create a working copy
 			#print(list(work_nx_multidigraph.edges_iter(data=True)))
 			size = flow_dict['out']['size']
 			prune_graph_by_available_capacity(work_nx_multidigraph, size)
@@ -367,32 +367,32 @@ def flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK):
 			try:
 				path = nx.dijkstra_path(work_nx_multidigraph, src, dst,'weight')
 				print "path: "+str(path)
-				allocate_flow (nx_links, path, size, "%s-out" % flow_id)
+				allocate_flow (nx_topology, path, size, "%s-out" % flow_id)
 				store_path (nx_flows, src, dst, flow_id, path)
 				set_allocated (flow_catalogue, flow_id, "out", allocated = True)
-				set_weights_on_available_capa(BIGK, nx_links)
+				set_weights_on_available_capa(BIGK, nx_topology)
 			except nx.NetworkXNoPath:
 				path = []
 				print "NON C'E' UN PATH"
 				continue
 
 		if 'in' in flow_dict and 'size' in flow_dict['in']:
-			work_nx_multidigraph = nx_links.copy()   # Create a working copy
+			work_nx_multidigraph = nx_topology.copy()   # Create a working copy
 			size = flow_dict['in']['size']
 			prune_graph_by_available_capacity(work_nx_multidigraph, size)
 			try:
 				path = nx.dijkstra_path(work_nx_multidigraph, dst, src,'weight')
-				allocate_flow (nx_links, path, size, "%s-in" % flow_id)
+				allocate_flow (nx_topology, path, size, "%s-in" % flow_id)
 				store_path (nx_flows, dst, src, flow_id, path)
 				set_allocated (flow_catalogue, flow_id, "in", allocated = True)
-				set_weights_on_available_capa(BIGK, nx_links)
+				set_weights_on_available_capa(BIGK, nx_topology)
 			except nx.NetworkXNoPath:
 				path = nx_flows[src][dst][flow_id]['path']
 				size = flow_dict['out']['size']
-				de_allocate_flow (nx_links, path, size, "%s-out" % flow_id)
+				de_allocate_flow (nx_topology, path, size, "%s-out" % flow_id)
 				delete_path (nx_flows, src, dst, flow_id)
 				set_allocated (flow_catalogue, flow_id, "out", allocated = False)
-				set_weights_on_available_capa(BIGK, nx_links)
+				set_weights_on_available_capa(BIGK, nx_topology)
 				
 
 	# Calculate the total size of the traffic relations admitted
@@ -416,7 +416,7 @@ def flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK):
 	print '###################################', '\n'
 
 	print('\nnx_multidigraph edges')
-	print(list(nx_links.edges_iter(data=True)))
+	print(list(nx_topology.edges_iter(data=True)))
 	print "#############################################################", "\n"
 	print "#############################################################", "\n"
 	print "#############################################################", "\n"
@@ -426,7 +426,7 @@ def flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK):
 		return
 
 	# Assignment Phase
-	Tglob = calculate_t_s(total_size, nx_links)
+	Tglob = calculate_t_s(total_size, nx_topology)
 	print 'Tglob:', Tglob, "\n"
 	Tfin = Tglob
 
@@ -438,52 +438,52 @@ def flow_assignment(nx_links, flow_catalogue, nx_flows, BIGK):
 				allocated = data['allocated']			
 				if allocated:
 					print "Tfin:", Tfin, "\n"
-					work_nx_links = nx_links.copy()
+					work_nx_topology = nx_topology.copy()
 					if direction == 'out':
 						path = nx_flows.edge[src][dst][flow_id]['path']
 					elif direction == 'in':
 						path = nx_flows.edge[dst][src][flow_id]['path']
 					print "Old Path:", path
 					print('\nnx_multidigraph edges pre-rerouting')
-					print(list(work_nx_links.edges_iter(data=True)))
+					print(list(work_nx_topology.edges_iter(data=True)))
 					print "#############################################################", "\n"
 					if direction == 'out':
-						de_allocate_flow (work_nx_links, path, size, "%s-out" % flow_id)
+						de_allocate_flow (work_nx_topology, path, size, "%s-out" % flow_id)
 					elif direction == 'in':
-						de_allocate_flow (work_nx_links, path, size, "%s-in" % flow_id)
-					set_weights_on_available_capa(BIGK, work_nx_links)
-					work_nx_links2 = work_nx_links.copy()
-					prune_graph_by_available_capacity(work_nx_links, size)
-					calculate_l(total_size, work_nx_links, S)
+						de_allocate_flow (work_nx_topology, path, size, "%s-in" % flow_id)
+					set_weights_on_available_capa(BIGK, work_nx_topology)
+					work_nx_topology2 = work_nx_topology.copy()
+					prune_graph_by_available_capacity(work_nx_topology, size)
+					calculate_l(total_size, work_nx_topology, S)
 					print('\nPruned Topology')
-					print(list(work_nx_links.edges_iter(data=True)))
+					print(list(work_nx_topology.edges_iter(data=True)))
 					print "#############################################################", "\n"
 					try:
 						if direction == 'out':
-							new_path = nx.dijkstra_path(work_nx_links, src, dst, 'l_value')
+							new_path = nx.dijkstra_path(work_nx_topology, src, dst, 'l_value')
 						elif direction == 'in':
-							new_path = nx.dijkstra_path(work_nx_links, dst, src, 'l_value')
+							new_path = nx.dijkstra_path(work_nx_topology, dst, src, 'l_value')
 						print "New Path :", new_path
 						if direction == 'out':
-							allocate_flow (work_nx_links2, new_path, size, "%s-out" % flow_id)
+							allocate_flow (work_nx_topology2, new_path, size, "%s-out" % flow_id)
 						elif direction == 'in':
-							allocate_flow (work_nx_links2, new_path, size, "%s-in" % flow_id)						
-						set_weights_on_available_capa(BIGK, work_nx_links2)
+							allocate_flow (work_nx_topology2, new_path, size, "%s-in" % flow_id)						
+						set_weights_on_available_capa(BIGK, work_nx_topology2)
 						print('\nnx_multidigraph edges post-rerouting')
-						print(list(work_nx_links2.edges_iter(data=True)))
+						print(list(work_nx_topology2.edges_iter(data=True)))
 						print "#############################################################", "\n"
-						t = calculate_t_s(total_size, work_nx_links2)
+						t = calculate_t_s(total_size, work_nx_topology2)
 						print "T:", t
 						if(t < Tfin):
 							if direction == 'out':
-								de_allocate_flow (nx_links, path, size, "%s-out" % flow_id)
-								allocate_flow (nx_links, new_path, size, "%s-out" % flow_id)
+								de_allocate_flow (nx_topology, path, size, "%s-out" % flow_id)
+								allocate_flow (nx_topology, new_path, size, "%s-out" % flow_id)
 								store_path (nx_flows, src, dst, flow_id, new_path)
 							elif direction == 'in':
-								de_allocate_flow (nx_links, path, size, "%s-in" % flow_id)
-								allocate_flow (nx_links, new_path, size, "%s-in" % flow_id)
+								de_allocate_flow (nx_topology, path, size, "%s-in" % flow_id)
+								allocate_flow (nx_topology, new_path, size, "%s-in" % flow_id)
 								store_path (nx_flows, dst, src, flow_id, new_path)
-							set_weights_on_available_capa(BIGK, nx_links)
+							set_weights_on_available_capa(BIGK, nx_topology)
 							Tfin = t
 					except nx.NetworkXNoPath:
 						new_path = []	
@@ -501,7 +501,7 @@ def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 			return nx_multidigraph[lhs][rhs][index]
 
 
-def flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint):
+def flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint):
 
 	print "*** Add Vlls From Configuration File"
 
@@ -607,9 +607,9 @@ def flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint):
 				elif (j > 0 and j < (len(route)-1)):
 					ap0Dpid = route[j-1]
 					ap1Dpid = route[j]
-					inlink = retrieve_link_from_id(nx_links, ap0Dpid, ap1Dpid, "%s-%s" %(flow_id, direction))
+					inlink = retrieve_link_from_id(nx_topology, ap0Dpid, ap1Dpid, "%s-%s" %(flow_id, direction))
 					ap2Dpid = route[j+1]
-					outlink = retrieve_link_from_id(nx_links, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
+					outlink = retrieve_link_from_id(nx_topology, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
 					inPort = inlink['dst_port_no']
 					outPort = outlink['dst_port_no']
 					temp_key1 = ap1Dpid + "-" + str(inPort)
@@ -653,7 +653,7 @@ def flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint):
 				# see the image more_than_one_hop for details on the switching label procedure
 				ap1Dpid = route[0]
 				ap2Dpid = route[1]
-				link = retrieve_link_from_id(nx_links, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
+				link = retrieve_link_from_id(nx_topology, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
 				ap1Port = link['src_port_no']
 				ap2Port = link['dst_port_no']
 				temp_key = ap2Dpid + "-" + str(ap2Port)
@@ -687,7 +687,7 @@ def flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint):
 				print "*** Create Egress Rules For RHS Of The Vll - %s" % (dstSwitch)
 				ap1Dpid = route[(len(route)-2)]
 				ap2Dpid = route[(len(route)-1)]
-				link = retrieve_link_from_id(nx_links, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
+				link = retrieve_link_from_id(nx_topology, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
 				ap1Port = link['src_port_no']
 				ap2Port = link['dst_port_no']
 				temp_key = ap2Dpid + "-" + str(ap2Port)
@@ -711,9 +711,9 @@ def flow_pusher(nx_links, flow_catalogue, nx_flows, ctrl_endpoint):
 					print "index:", i
 					ap0Dpid = route[i]
 					ap1Dpid = route[i+1]
-					inlink = retrieve_link_from_id(nx_links, ap0Dpid, ap1Dpid, "%s-%s" %(flow_id, direction))
+					inlink = retrieve_link_from_id(nx_topology, ap0Dpid, ap1Dpid, "%s-%s" %(flow_id, direction))
 					ap2Dpid = route[i+2]
-					outlink = retrieve_link_from_id(nx_links, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
+					outlink = retrieve_link_from_id(nx_topology, ap1Dpid, ap2Dpid, "%s-%s" %(flow_id, direction))
 					ap0Port = inlink['dst_port_no']
 					ap1Port = outlink['src_port_no']
 					ap2Port = outlink['dst_port_no']
@@ -760,12 +760,11 @@ def store_vll(name, dpid, table):
 	vllsDb.close()
 
 def run_command(data):
-	nx_links = nx.MultiDiGraph()
-	nx_nodes = nx.MultiDiGraph()
-	parse_graphml(args.file, nx_links, nx_nodes, defa_node_type="OSHI-CR", defa_link_type="core")
-	add_edge_nodes(nx_links,nx_nodes)
+	nx_topology = nx.MultiDiGraph()
+	parse_graphml(args.file, nx_topology, defa_node_type="OSHI-CR", defa_link_type="core")
+	add_edge_nodes(nx_topology)
 	#flow_allocator(args.controllerRestIp)
-	simulate_flow_allocator(nx_links)	
+	simulate_flow_allocator(nx_topology)	
 
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description='Flow Allocator')
