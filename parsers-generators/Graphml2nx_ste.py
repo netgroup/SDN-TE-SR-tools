@@ -37,7 +37,11 @@ pusher_cfg = {}
 
 
 # operates on the topology object nx_topology_new passed by reference
-def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link_type=""):
+# if allow_multilink is False, an edge with the same source and destination of an existing edge is not added
+# by default, directed_graph_in=False this means that the input graph is assumed to be undirected and two directed links are added
+# for each input link
+
+def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link_type="", allow_multilink=True, directed_graph_in=False):
 
 	if input_file_name == 'None':
 	   sys.exit('\n\tNo input file was specified as argument....!')
@@ -106,28 +110,31 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 
 			if d.attrib["key"] == node_label_id_in_graphml:
 				#prende l'id del nodo
-				node_id_value = re.sub(r'\s+', '', d.text)		
-
-				
-        	
+				node_id_value = re.sub(r'\s+', '', d.text)
+				print node_id_value		
+	
 
         #save id:data couple
-		id_node_city_dict[node_index_value] = node_name_value
-		id_node_country_dict[node_index_value] = node_country_value
-		id_node_id_dict[node_index_value] = int(node_id_value)
-		
+		#id_node_city_dict[node_index_value] = node_name_value
+		#id_node_country_dict[node_index_value] = node_country_value
+		#id_node_id_dict[node_index_value] = int(node_id_value)
+		id_node_id_dict[node_index_value] = str(node_id_value)
+
+		#nx_topology_new.add_node(str(node_id_value), city = node_name_value, country = node_country_value, type_node = 'core' )
+		nx_topology_new.add_node(str(node_id_value), city = node_name_value, country = node_country_value)
+		nx_topology_new.node[str(node_id_value)][NODE_TYPE_KEY]=defa_node_type
 
 			
-	for i in range(0, len(id_node_city_dict)):
-		#Aggiungo i link nella lista 
-		nx_topology_new.add_node(int(id_node_id_dict[str(i)]))
-		nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]=defa_node_type
+	#for i in range(0, len(id_node_city_dict)):
+	#	#Aggiungo i link nella lista 
+	#	nx_topology_new.add_node(int(id_node_id_dict[str(i)]))
+	#	nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]=defa_node_type
 
-		#print "===========", nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]
+	#	#print "===========", nx_topology_new.node[int(id_node_id_dict[str(i)])][NODE_TYPE_KEY]
 
-		#print 'node City = '+id_node_city_dict[str(i)]+" Country = "+ id_node_country_dict[str(i)]+" id = "+str(id_node_id_dict[str(i)])
+	#	#print 'node City = '+id_node_city_dict[str(i)]+" Country = "+ id_node_country_dict[str(i)]+" id = "+str(id_node_id_dict[str(i)])
 		
-	print "\n"
+	#print "\n"
 
 
 	i=0
@@ -155,35 +162,33 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 		#print "Link tra "+str(id_node_id_dict[src_id])+" e "+str(id_node_id_dict[dst_id])+" con capacita': "+str(id_node_link_speed_dict[i])
 
 		#Carico il link 
-		src_index= int(id_node_id_dict[src_id])
-		dst_index= int(id_node_id_dict[dst_id])
+		src_index= str(id_node_id_dict[src_id])
+		dst_index= str(id_node_id_dict[dst_id])
 
-		unique_key = get_id()
+		if (not (nx_topology_new.has_edge(src_index,dst_index)) and allow_multilink): 
 		
-		#nx_topology_new.add_edge(src_index,dst_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type=defa_link_type ,flows=[])
-		nx_topology_new.add_edge(src_index,dst_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0 ,flows=[])
-		#nx_topology_new.add_edge(src_index,dst_index) 
-		#print "eccooooo", nx_topology_new.edges(data=True)
-		#nx_topology_new.edge[src_index][dst_index]['capacity'] = round(float(id_node_link_speed_dict[i]))
-		#nx_topology_new.edge[src_index][dst_index]['allocated'] = 0
-		nx_topology_new.edge[src_index][dst_index][unique_key][LINK_TYPE_KEY] = defa_link_type
-		#nx_topology_new.edge[src_index][dst_index]['flows'] = []
+			unique_key = get_id()
 
-		unique_key = get_id()
-		#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI CORE        
-		#nx_topology_new.add_edge(dst_index,src_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, type=defa_link_type ,flows=[])
-		nx_topology_new.add_edge(dst_index,src_index, key= unique_key, capacity = round(float(id_node_link_speed_dict[i])), allocated=0, flows=[])
-		#nx_topology_new.add_edge(dst_index,src_index) 
-		#nx_topology_new.edge[dst_index][src_index]['capacity'] = round(float(id_node_link_speed_dict[i]))
-		#nx_topology_new.edge[dst_index][src_index]['allocated'] = 0
-		nx_topology_new.edge[dst_index][src_index][unique_key][LINK_TYPE_KEY] = defa_link_type
-		#nx_topology_new.edge[dst_index][src_index]['flows'] = []
+			add_single_link(nx_topology_new, src_index, dst_index, unique_key, round(float(id_node_link_speed_dict[i])), defa_link_type)		
+
+		if (not directed_graph_in):
+
+			if (not(nx_topology_new.has_edge(dst_index,src_index)) and allow_multilink): 
+				unique_key = get_id()
+				#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI CORE        
+				add_single_link(nx_topology_new, dst_index, src_index, unique_key, round(float(id_node_link_speed_dict[i])), defa_link_type)		
+
 
 		i=i+1
 
 
 
 	#return is not needed as the function operates on the topology object passed by reference
+
+def add_single_link(nx_topology_new, src_index, dst_index, unique_key, capacity_value, defa_link_type):
+		nx_topology_new.add_edge(src_index,dst_index, key= unique_key, capacity = capacity_value, allocated=0 ,flows=[], id=unique_key)
+		nx_topology_new.edge[src_index][dst_index][unique_key][LINK_TYPE_KEY] = defa_link_type
+
 
 
 #it adds edge nodes to the nx_topology_new object
