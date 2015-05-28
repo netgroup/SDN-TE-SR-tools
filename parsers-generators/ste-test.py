@@ -49,6 +49,7 @@ from timer_cspf import *
 from Graphml2nx_ste import * 
 from Nx2t3d import *
 from Nx2json import *
+from demand_gen_ste import *
 
 
 CONFIDENCE = 5
@@ -202,6 +203,7 @@ def flow_allocator(ctrl_endpoint):
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
+#generates links.json and nodes.json
 def serialize(nx_topology_new):
 
 	with open('links.json', 'w') as outfile:
@@ -211,6 +213,12 @@ def serialize(nx_topology_new):
 	with open('nodes.json', 'w') as outfile:
 		json.dump(nx_topology_new.nodes(data=True), outfile, indent=4, sort_keys=True)
 		outfile.close()	
+
+#generates flow_catalogue.json
+def serialize_flow_catalogue(flow_catalogue):
+	with open('flow_catalogue.json', 'w') as outfile:
+		json.dump(flow_catalogue, outfile, indent=4, sort_keys=True)
+		outfile.close()		
 
 def print_links(nx_topology_new):
 
@@ -241,10 +249,18 @@ def run_command(args_in):
 
 		#print inspect.getfile(parse_graphml)
 		
-		parse_graphml(nx_topology_new, args_in.file, defa_node_type="OSHI-CR", defa_link_type="Data")
+		parse_graphml(nx_topology_new, args_in.file, defa_node_type="OSHI-CR", defa_link_type="Data", allow_multilink=False)
 		print_info(nx_topology_new)
+		add_nodes_marks(nx_topology_new, p_mark=0.4, key_to_add='is_edge')
+		#del_nodes_marks(nx_topology_new, "is_edge")
+
 		serialize(nx_topology_new)
 	
+		flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
+		serialize_flow_catalogue(flow_catalogue)
+
+		dict=get_flow_catalogue_stats(flow_catalogue)
+		print dict
 
 	if args_in.file_type_in=='t3d':
 		t3d_json_2_nx(nx_topology_new, args_in.file)
@@ -254,6 +270,9 @@ def run_command(args_in):
 	
 	if args_in.file_type_out=='t3d':
 		nx_2_t3d_json(nx_topology_new, 'out.t3d')
+
+
+	#generate_flows(nx_topology_new, edge_nodes_fraction)
 
 
 

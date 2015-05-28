@@ -111,7 +111,7 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 			if d.attrib["key"] == node_label_id_in_graphml:
 				#prende l'id del nodo
 				node_id_value = re.sub(r'\s+', '', d.text)
-				print node_id_value		
+				#print node_id_value		
 	
 
         #save id:data couple
@@ -165,7 +165,7 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 		src_index= str(id_node_id_dict[src_id])
 		dst_index= str(id_node_id_dict[dst_id])
 
-		if (not (nx_topology_new.has_edge(src_index,dst_index)) and allow_multilink): 
+		if (not (nx_topology_new.has_edge(src_index,dst_index)) or allow_multilink): 
 		
 			unique_key = get_id()
 
@@ -173,7 +173,7 @@ def parse_graphml(nx_topology_new, input_file_name, defa_node_type="", defa_link
 
 		if (not directed_graph_in):
 
-			if (not(nx_topology_new.has_edge(dst_index,src_index)) and allow_multilink): 
+			if (not(nx_topology_new.has_edge(dst_index,src_index)) or allow_multilink): 
 				unique_key = get_id()
 				#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI CORE        
 				add_single_link(nx_topology_new, dst_index, src_index, unique_key, round(float(id_node_link_speed_dict[i])), defa_link_type)		
