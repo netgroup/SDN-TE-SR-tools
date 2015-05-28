@@ -19,10 +19,10 @@ def add_multiple_flows(flow_catalogue, s, src, dst, avg_flow_size):	            
 		#out_file.write("il flusso "+str(count)+" ["+str(src)+", "+str(dst)+"]\n")
 		size = capacita_flusso_mod_esp(avg_flow_size)
 		flow_id = get_id()
-		flow_catalogue[flow_id]=(src,dst,{'id': flow_id, 'out':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
+		flow_catalogue[flow_id]=(src,dst,{'id': flow_id, 'out':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
 		size = capacita_flusso_mod_esp(avg_flow_size)
 		flow_id = get_id()
-		flow_catalogue[flow_id]=(dst,src,{'id': flow_id,'out':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
+		flow_catalogue[flow_id]=(dst,src,{'id': flow_id,'out':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
 	
 
 #returns the avg_flow_demand that corresponds to the link_capa_to_traff_rel_ratio
