@@ -17,12 +17,10 @@ def add_multiple_flows(flow_catalogue, s, src, dst, avg_flow_size):	            
 	for k in range(0,s):
 		#count = count +1 	
 		#out_file.write("il flusso "+str(count)+" ["+str(src)+", "+str(dst)+"]\n")
-		size = capacita_flusso_mod_esp(avg_flow_size)
+		size_out = capacita_flusso_mod_esp(avg_flow_size)
+		size_in = capacita_flusso_mod_esp(avg_flow_size)
 		flow_id = get_id()
-		flow_catalogue[flow_id]=(src,dst,{'id': flow_id, 'out':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
-		size = capacita_flusso_mod_esp(avg_flow_size)
-		flow_id = get_id()
-		flow_catalogue[flow_id]=(dst,src,{'id': flow_id,'out':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''},'in':{'path': [], 'size': size, 'allocated': False, 'srcPort': '', 'dstPort':''}})
+		flow_catalogue[flow_id]=(src,dst,{'id': flow_id, 'out':{'path': [], 'size': size_out, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type':'vll'},'in':{'path': [], 'size': size_in, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type':'vll'}})
 	
 
 #returns the avg_flow_demand that corresponds to the link_capa_to_traff_rel_ratio
@@ -100,35 +98,33 @@ def build_flows(nx_topology, traffic_rel_probability=1, avg_num_flows=1, max_num
 						#print "s= ", s
 						add_multiple_flows(flow_catalogue, s, node_id_src, node_id_dst, avg_flow_size)
 						
-						#size = capacita_flusso_mod_unif(avg_flow_size)
-						#out_file.write("il flusso "+str(count)+" ["+str(my_node[0])+", "+str(my_edge[0])+"] \n")
-						#flow_catalogue[count]=(my_node[0],my_edge[0],{'out':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':'', "path": [], "type": "vll"}})
-						#count = count +1
-						#flow_catalogue[count]=(my_edge[0],my_node[0],{'out':{'size': size, 'allocated': False, 'srcPort': '', 'dstPort':'', "path": [], "type": "vll"}})
-						#s = np.random.geometric((1/float(avg_num_flows)))                                        # s e' il numero dei flussi multipli, segue una distribuzione geometrica
-						#flow_catalogue=add_multiple_flows(s, flow_catalogue, my_node[0], my_edge[0], count, out_file, avg_flow_size)           # carica i flussi multipli
-						#count=len(flow_catalogue)
-
-
 
 	return flow_catalogue		
 
 def get_flow_catalogue_stats(flow_catalogue):
 	out_dict={}
-	out_dict['num_of_flows']=len(flow_catalogue)
+	out_dict['num_of_flows_in_catalogue']=len(flow_catalogue)
 
 	overall_size_sum = 0
 	overall_count = 0
 	unidir_traffic_relations={}
 	for my_flow_id, flow_data in flow_catalogue.iteritems():
+		if 'out' in flow_data[2] and 'size' in flow_data[2]['out']:
+			overall_count += 1
+			overall_size_sum += flow_data[2]['out']['size']
+			if not (flow_data[0], flow_data[1]) in unidir_traffic_relations:
+				unidir_traffic_relations[flow_data[0], flow_data[1]]={}
 		if 'in' in flow_data[2] and 'size' in flow_data[2]['in']:
 			overall_count += 1
 			overall_size_sum += flow_data[2]['in']['size']
-		if not (flow_data[0], flow_data[1]) in unidir_traffic_relations:
-			unidir_traffic_relations[flow_data[0], flow_data[1]]={}
+			if not (flow_data[1], flow_data[0]) in unidir_traffic_relations:
+				unidir_traffic_relations[flow_data[1], flow_data[0]]={}
 	#	if not 'num_flows' in unidir_traffic_relations[flow_data[0], flow_data[1]]:
 	#		unidir_traffic_relations[flow_data[0], flow_data[1]]['num_flows']=0
 	#	unidir_traffic_relations[flow_data[0], flow_data[1]]['num_flows']+=1
+	
+	out_dict['num_of_unidir_flows']=overall_count
+
 
 	avg_flow_size=0
 	if overall_count > 0:
@@ -137,7 +133,7 @@ def get_flow_catalogue_stats(flow_catalogue):
 
 	out_dict['num_of_unidir_traffic_relations']=len(unidir_traffic_relations)
 	if len(unidir_traffic_relations) > 0:
-		out_dict['avg_num_of_flow_per_unidir_traffic_relation']=len(flow_catalogue)/float(len(unidir_traffic_relations))
+		out_dict['avg_num_of_flow_per_unidir_traffic_relation']=overall_count/float(len(unidir_traffic_relations))
 
 
 	#for traffic_relation in unidir_traffic_relations:
