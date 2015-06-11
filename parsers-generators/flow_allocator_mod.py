@@ -292,7 +292,7 @@ def flow_allocator(ctrl_endpoint):
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
-def simulate_flow_allocator(nx_topology):
+def simulate_flow_allocator(nx_topology, data):
 
 
 	# BIGK is the max available capacity
@@ -310,7 +310,9 @@ def simulate_flow_allocator(nx_topology):
 
 	flows_file=open("flussi.out","w")
 
-	flow_catalogue_new = build_flows(nx_topology, flows_file)				# richiama la funzione che genera i flussi 
+	Risultati_Test = open("Risultati_Test.out","w")
+
+	flow_catalogue_new = build_flows(nx_topology, flows_file, Risultati_Test, data)				# richiama la funzione che genera i flussi 
 
 	# Assign the weights
 	set_weights_on_available_capa(BIGK, nx_topology)  
@@ -338,13 +340,13 @@ def simulate_flow_allocator(nx_topology):
 
 	
 	sh_path_file=open("shortest_path.out","w")
-	time_shortestpath(nx_topology_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file)                         #timer per algoritmo di shortest path
+	time_shortestpath(nx_topology_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file, Risultati_Test)                         #timer per algoritmo di shortest path
 	
 	cspf_he_file=open("CSPF_euristico.out","w")
-	time_cspf_heuristic(nx_topology_cspfe, flow_catalogue_new_cspfe, nx_flows_cspfe, BIGK, cspf_he_file)         #timer per algoritmo cspf euristico
+	time_cspf_heuristic(nx_topology_cspfe, flow_catalogue_new_cspfe, nx_flows_cspfe, BIGK, cspf_he_file, Risultati_Test)         #timer per algoritmo cspf euristico
 	
 	cspf_file=open("CSPF.out","w")
-	time_cspf(nx_topology_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file)				       #timer per algoritmo cspf					
+	time_cspf(nx_topology_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file, Risultati_Test)				       #timer per algoritmo cspf					
 	
 
 	
@@ -764,7 +766,7 @@ def run_command(data):
 	parse_graphml(args.file, nx_topology, defa_node_type="OSHI-CR", defa_link_type="core")
 	add_edge_nodes(nx_topology)
 	#flow_allocator(args.controllerRestIp)
-	simulate_flow_allocator(nx_topology)	
+	simulate_flow_allocator(nx_topology, args.file)	
 
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description='Flow Allocator')

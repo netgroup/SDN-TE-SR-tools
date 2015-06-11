@@ -155,11 +155,11 @@ def add_edge_nodes(nx_topology):
 				#GENERA I NODI DI BORDO
 				nx_topology.add_node(n_nodi_core+i, city = node_name_value, country = node_country_value, type_node = "bordo")
 
+				c = int(random.uniform(100,200))
+
 				#GENERA COLLEGAMENTI TRA NODI DI BORDO E I NODI CORE SCELTI RANDOM
-				nx_topology.add_edge(n_nodi_core+i, dst, capacity = int(random.uniform(50,200)), allocated=0, flows=[])
+				nx_topology.add_edge(n_nodi_core+i, dst, capacity = c, allocated=0, flows=[])
 		
 				#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI DI BORDO 
-				nx_topology.add_edge(dst, n_nodi_core+i, capacity = int(random.uniform(50,200)), allocated=0, flows=[])
+				nx_topology.add_edge(dst, n_nodi_core+i, capacity = c, allocated=0, flows=[])
 
-	file_node = open("nodi.txt","w")
-	file_node.write(str(list(nx_topology.nodes_iter(data=True))))

@@ -9,7 +9,7 @@ from timer_utility import *
 
 flows_overload = {}
 
-def time_shortestpath(nx_topology, flow_catalogue, nx_flows, out_file):
+def time_shortestpath(nx_topology, flow_catalogue, nx_flows, out_file, Risultati_Test):
 
 	n_nodi_di_bordo = 0
 	n_nodi_core = 0
@@ -83,11 +83,8 @@ def time_shortestpath(nx_topology, flow_catalogue, nx_flows, out_file):
 			n_link_overload = n_link_overload + 1
 
 
-	n_link_tot = 0		
-	for edge in nx_topology.edges_iter(data = True):
-		if edge[2]['flows'] :
-			n_link_tot = n_link_tot + 1
-
+	n_link_tot = nx_topology.size()		
+		
 	perc = (n_link_overload/n_link_tot)*100
 	
 
@@ -98,7 +95,13 @@ def time_shortestpath(nx_topology, flow_catalogue, nx_flows, out_file):
 	out_file.write('Tglob = '+str(Tglob)+ "\n")
 	out_file.write("La somma totale dei flussi (total_size) e' "+str(total_size)+"\n")
 
-	
+	Risultati_Test.write("La rete e' composta da "+str(n_nodi_core)+" nodi core e "+str(n_nodi_di_bordo)+" nodi di bordo, con un totale di "+str(len(flow_catalogue))+" flussi\n")
+	Risultati_Test.write("\n")
+	Risultati_Test.write("Utilizzando l'algoritmo di shortest path si hanno "+str(n_link_overload)+" link sovraccarichi su un totale di "+str(n_link_tot)+" link\n")
+	Risultati_Test.write("Quindi la percentuale di link sovraccarichi e' "+"%.2f" % perc+"%\n")
+	Risultati_Test.write("L'algoritmo di shortestpath viene eseguito in "+str(tempo_finale-tempo_iniziale)+"\n")
+	Risultati_Test.write("\n")
+
 	for flow_id, (src, dst, flow_dict) in flow_catalogue.iteritems():
 		if 'out' in flow_dict and 'size' in flow_dict['out']:
 			set_allocated (flow_catalogue, flow_id, "out", allocated = False)
