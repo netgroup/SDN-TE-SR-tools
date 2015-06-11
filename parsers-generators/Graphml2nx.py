@@ -143,23 +143,15 @@ def add_edge_nodes(nx_topology):
 
 	random.seed(10)        #generatore casuale con seme per rendere ripetibile la topologia, viene usato per decidere i collegamenti dei nodi di bordo
 
-	for i in range(0,n_nodi_di_bordo):
-		dst= random.randrange(0,n_nodi_core-1,1)
-		
-		# associa ad ogni nodo di bordo creato, city e country del nodo core a cui viene collegato 
-		for node in nx_topology.nodes_iter(data=True):
-			if int(node[0]) == dst :
-				node_name_value = node[1]['city']
-				node_country_value = node[1]['country']
+	count = 0
+	random.seed(10)
+	
+	while count < n_nodi_di_bordo:
+		nodo_bordo = random.randrange(0,n_nodi_core)
 
-				#GENERA I NODI DI BORDO
-				nx_topology.add_node(n_nodi_core+i, city = node_name_value, country = node_country_value, type_node = "bordo")
+		if nx_topology.node[nodo_bordo]['type_node'] == 'core':
+			nx_topology.node[nodo_bordo]['type_node'] = 'bordo'
+			count = count + 1
 
-				c = int(random.uniform(100,200))
-
-				#GENERA COLLEGAMENTI TRA NODI DI BORDO E I NODI CORE SCELTI RANDOM
-				nx_topology.add_edge(n_nodi_core+i, dst, capacity = c, allocated=0, flows=[])
-		
-				#GENERA COLLEGAMENTI CONTRARI A QUELLI SOPRA IN MODO DA CREARE LINK BIDIREZIONALI TRA I NODI DI BORDO 
-				nx_topology.add_edge(dst, n_nodi_core+i, capacity = c, allocated=0, flows=[])
-
+	
+	
