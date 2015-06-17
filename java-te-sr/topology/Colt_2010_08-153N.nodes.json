@@ -1,0 +1,1226 @@
+[
+    [
+        "133", 
+        {
+            "city": "Neuss", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "132", 
+        {
+            "city": "Hoofddorp", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "131", 
+        {
+            "city": "Hilversum", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "130", 
+        {
+            "city": "Almere", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "137", 
+        {
+            "city": "Barcelona", 
+            "country": "Spain", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "136", 
+        {
+            "city": "Essen", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "135", 
+        {
+            "city": "Dortmund", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "134", 
+        {
+            "city": "Wuppertal", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "139", 
+        {
+            "city": "Paris", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "138", 
+        {
+            "city": "Turin", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "24", 
+        {
+            "city": "Sassari", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "25", 
+        {
+            "city": "Bari", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "26", 
+        {
+            "city": "Palermo", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "27", 
+        {
+            "city": "Cagliari", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "20", 
+        {
+            "city": "Sintra", 
+            "country": "Portugal", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "21", 
+        {
+            "city": "Catania", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "22", 
+        {
+            "city": "Porto", 
+            "country": "Portugal", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "23", 
+        {
+            "city": "Lisbon", 
+            "country": "Portugal", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "28", 
+        {
+            "city": "Boston", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "29", 
+        {
+            "city": "Chicago", 
+            "country": "Sweden", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "0", 
+        {
+            "city": "Linz", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "4", 
+        {
+            "city": "Leipzig", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "8", 
+        {
+            "city": "Nuremberg", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "119", 
+        {
+            "city": "Stuttgart", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "120", 
+        {
+            "city": "Bern", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "121", 
+        {
+            "city": "Nantes", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "122", 
+        {
+            "city": "Toulouse", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "123", 
+        {
+            "city": "Lyon", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "124", 
+        {
+            "city": "Geneve", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "125", 
+        {
+            "city": "Zug", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "126", 
+        {
+            "city": "Lugano", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "127", 
+        {
+            "city": "Bremen", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "128", 
+        {
+            "city": "Magdemburg", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "129", 
+        {
+            "city": "Utrecht", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "118", 
+        {
+            "city": "Strasbourg", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "59", 
+        {
+            "city": "Oslo", 
+            "country": "Norway", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "58", 
+        {
+            "city": "Gothenburg", 
+            "country": "Sweden", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "55", 
+        {
+            "city": "NewYork", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "54", 
+        {
+            "city": "Newark", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "57", 
+        {
+            "city": "Helsinki", 
+            "country": "Finland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "56", 
+        {
+            "city": "Stockholm", 
+            "country": "Sweden", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "51", 
+        {
+            "city": "Hamburg", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "50", 
+        {
+            "city": "Copenhagen", 
+            "country": "Denmark", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "53", 
+        {
+            "city": "Aarhus", 
+            "country": "Denmark", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "52", 
+        {
+            "city": "Malmo", 
+            "country": "Sweden", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "115", 
+        {
+            "city": "Lille", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "114", 
+        {
+            "city": "Vicenza", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "88", 
+        {
+            "city": "Novara", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "89", 
+        {
+            "city": "Biella", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "111", 
+        {
+            "city": "Verona", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "110", 
+        {
+            "city": "Monza", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "113", 
+        {
+            "city": "Trieste", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "112", 
+        {
+            "city": "Brescia", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "82", 
+        {
+            "city": "Marseille", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "83", 
+        {
+            "city": "Nice", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "80", 
+        {
+            "city": "Valencia", 
+            "country": "Spain", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "81", 
+        {
+            "city": "Rome", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "86", 
+        {
+            "city": "Bordeaux", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "87", 
+        {
+            "city": "Borgomanero", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "84", 
+        {
+            "city": "Montpellier", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "85", 
+        {
+            "city": "Grenoble", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "3", 
+        {
+            "city": "Potsdam", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "7", 
+        {
+            "city": "Warsaw", 
+            "country": "Poland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "108", 
+        {
+            "city": "Bologna", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "109", 
+        {
+            "city": "Bergamo", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "102", 
+        {
+            "city": "Innsbruck", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "103", 
+        {
+            "city": "Trento", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "100", 
+        {
+            "city": "Klagenfurt", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "101", 
+        {
+            "city": "Budapest", 
+            "country": "Hungary", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "106", 
+        {
+            "city": "ReggioEmilia", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "107", 
+        {
+            "city": "Padova", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "104", 
+        {
+            "city": "Bucharest", 
+            "country": "Romania", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "105", 
+        {
+            "city": "Modena", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "39", 
+        {
+            "city": "Nyon", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "38", 
+        {
+            "city": "Schaffhausen", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "33", 
+        {
+            "city": "StGallen", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "32", 
+        {
+            "city": "Pfaffikon", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "31", 
+        {
+            "city": "Boblingen", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "30", 
+        {
+            "city": "Karlsruhe", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "37", 
+        {
+            "city": "Biel/Bienne", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "36", 
+        {
+            "city": "Lausanne", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "35", 
+        {
+            "city": "Winterthur", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "34", 
+        {
+            "city": "Esslingen", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "60", 
+        {
+            "city": "None", 
+            "country": "Norway", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "61", 
+        {
+            "city": "Brindisi", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "62", 
+        {
+            "city": "None", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "63", 
+        {
+            "city": "Lucerne", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "64", 
+        {
+            "city": "Chiasso", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "65", 
+        {
+            "city": "Piacenza", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "66", 
+        {
+            "city": "Genova", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "67", 
+        {
+            "city": "Livorno", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "68", 
+        {
+            "city": "Firenze", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "69", 
+        {
+            "city": "Rimini", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "2", 
+        {
+            "city": "Rostock", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "6", 
+        {
+            "city": "Krakov", 
+            "country": "Poland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "99", 
+        {
+            "city": "Salzburg", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "98", 
+        {
+            "city": "Bratislava", 
+            "country": "Slovakia", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "91", 
+        {
+            "city": "Reading", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "90", 
+        {
+            "city": "Cuneo", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "93", 
+        {
+            "city": "Napoli", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "92", 
+        {
+            "city": "Kolding", 
+            "country": "Denmark", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "95", 
+        {
+            "city": "Venezia", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "94", 
+        {
+            "city": "Ostend", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "97", 
+        {
+            "city": "Graz", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "96", 
+        {
+            "city": "Treviso", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "11", 
+        {
+            "city": "Prague", 
+            "country": "CzechRepublic", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "10", 
+        {
+            "city": "Vienna", 
+            "country": "Austria", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "13", 
+        {
+            "city": "Munich", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "12", 
+        {
+            "city": "Mannheim", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "15", 
+        {
+            "city": "TheHague", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "14", 
+        {
+            "city": "Cologne", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "17", 
+        {
+            "city": "Dusseldorf", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "16", 
+        {
+            "city": "Hannover", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "19", 
+        {
+            "city": "Rotterdam", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "18", 
+        {
+            "city": "Antwerp", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "117", 
+        {
+            "city": "Basel", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "116", 
+        {
+            "city": "Kortnijk", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "151", 
+        {
+            "city": "Madrid", 
+            "country": "Spain", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "150", 
+        {
+            "city": "Bristol", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "152", 
+        {
+            "city": "Milan", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "48", 
+        {
+            "city": "Breda", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "49", 
+        {
+            "city": "DenBosch", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "46", 
+        {
+            "city": "Luxembourg", 
+            "country": "Luxembourg", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "47", 
+        {
+            "city": "Evere", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "44", 
+        {
+            "city": "Leuven", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "45", 
+        {
+            "city": "Eindhoven", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "42", 
+        {
+            "city": "Anderlecht", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "43", 
+        {
+            "city": "Mons", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "40", 
+        {
+            "city": "Charleroi", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "41", 
+        {
+            "city": "Liege", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "1", 
+        {
+            "city": "StPollen", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "5", 
+        {
+            "city": "Dresden", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "9", 
+        {
+            "city": "Erding", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "146", 
+        {
+            "city": "Tours", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "147", 
+        {
+            "city": "Poitiers", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "144", 
+        {
+            "city": "Berlin", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "145", 
+        {
+            "city": "Dijon", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "142", 
+        {
+            "city": "Brussels", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "143", 
+        {
+            "city": "Amsterdam", 
+            "country": "Netherlands", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "140", 
+        {
+            "city": "London", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "141", 
+        {
+            "city": "Frankfurt", 
+            "country": "Germany", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "148", 
+        {
+            "city": "Rennes", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "149", 
+        {
+            "city": "Rouen", 
+            "country": "France", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "77", 
+        {
+            "city": "Birmingham", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "76", 
+        {
+            "city": "Manchester", 
+            "country": "UnitedKingdom", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "75", 
+        {
+            "city": "Dublin", 
+            "country": "Ireland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "74", 
+        {
+            "city": "Zurich", 
+            "country": "Switzerland", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "73", 
+        {
+            "city": "None", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "72", 
+        {
+            "city": "Como", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "71", 
+        {
+            "city": "Varese", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "70", 
+        {
+            "city": "Parma", 
+            "country": "Italy", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "79", 
+        {
+            "city": "None", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ], 
+    [
+        "78", 
+        {
+            "city": "Ghent", 
+            "country": "Belgium", 
+            "type": "OSHI-CR"
+        }
+    ]
+]
