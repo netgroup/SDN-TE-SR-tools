@@ -81,8 +81,6 @@ def del_nodes_marks (nx_topology, key_to_remove):
  #traffic_rel_probability               probability that two access nodes have a traffic relation 
 def build_flows(nx_topology, traffic_rel_probability=1, avg_num_flows=1, max_num_flows=10, link_capa_to_traff_rel_ratio=20):
 	
-	#random.seed(10)	                      #rende ripetibili le prove 
-	np.random.seed(10)                    #rende ripetibile la distribuzione geometrica che usa la libreria numpy
 	flow_catalogue = {}
 
 
