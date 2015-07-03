@@ -230,10 +230,12 @@ def print_links(nx_topology_new):
 
 def print_info(nx_topology_new):
 
-	print "num of nodes", nx_topology_new.number_of_nodes()
-	print "num of edges", nx_topology_new.number_of_edges()
-
-
+	print "(nodes, edges, avg_degree) : (", \
+	    nx_topology_new.number_of_nodes(), ",",\
+	    nx_topology_new.number_of_edges(), ",",\
+	    float(nx_topology_new.number_of_edges())/nx_topology_new.number_of_nodes(), \
+	    ")"
+	
 
 def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 	for index in nx_multidigraph[lhs][rhs]:
@@ -242,6 +244,12 @@ def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 
 
 def run_command(args_in):
+
+	my_seed = 69
+	random.seed(my_seed)	   #reset random seed to have repeteable output 
+	np.random.seed(my_seed)    #reset random seed for numpy library (used in  geometric distribution)
+
+
 	nx_topology_new = nx.MultiDiGraph()
 
 
@@ -250,16 +258,31 @@ def run_command(args_in):
 		#print inspect.getfile(parse_graphml)
 		
 		parse_graphml(nx_topology_new, args_in.file, defa_node_type="OSHI-CR", defa_link_type="Data", allow_multilink=False)
+		print "imported a topology from graphml file"
 		print_info(nx_topology_new)
-		add_nodes_marks(nx_topology_new, p_mark=0.4, key_to_add='is_edge')
+
+
+		#### randomly adds the key value pair 'is_edge'=True to a subset of nodes (needed to generate traffic demand)
+		(access_nodes, total_nodes) = add_nodes_marks(nx_topology_new, p_mark=float(args_in.access_prob), key_to_add='is_edge')
+		print "number of access nodes ", access_nodes, " (", float(access_nodes)/total_nodes*100, "% )"
+		
 		#del_nodes_marks(nx_topology_new, "is_edge")
 
 		serialize(nx_topology_new)
 	
-		flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
+
+		#### generates a traffic demand
+		#flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
+		flow_catalogue = build_flows(nx_topology_new,
+									 traffic_rel_probability=float(args_in.t_rel_prob),
+									 avg_num_flows = float(args_in.mean_num_flows),
+									 max_num_flows = int(args_in.max_num_flows),
+									 link_capa_to_traff_rel_ratio=float(args_in.l_to_t_rel_prob)
+									 )
 		serialize_flow_catalogue(flow_catalogue)
 
-		dict=get_flow_catalogue_stats(flow_catalogue)
+		print "generated traffic demands"
+		dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
 		print dict
 
 	if args_in.file_type_in=='t3d':
@@ -270,6 +293,7 @@ def run_command(args_in):
 	
 	if args_in.file_type_out=='t3d':
 		nx_2_t3d_json(nx_topology_new, 'out.t3d')
+		print "converted topology in .t3d format"
 
 
 	#generate_flows(nx_topology_new, edge_nodes_fraction)
@@ -284,12 +308,26 @@ def run_command(args_in):
 
 	#flow_allocator(args.controllerRestIp)
 
+# python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10
+
+
 def parse_cmd_line():
-	parser = argparse.ArgumentParser(description='Flow Allocator')
-	parser.add_argument('--controller', dest='controllerRestIp', action='store', default='localhost:8080', help='controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
+	parser = argparse.ArgumentParser(description="Parses and transforms topologies between different formats - Generates traffic demands")
+	#parser.add_argument('--controller', dest='controllerRestIp', action='store', default='localhost:8080', help='controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
 	parser.add_argument('--f', dest='file', action='store', help='input file to parse')
 	parser.add_argument('--in', dest='file_type_in', action='store', default='graphml', help='type of input file, default = graphml, options = t3d')
 	parser.add_argument('--out', dest='file_type_out', action='store', default='t3d', help='type of output file, default = t3d, options = nx')
+	#parser.add_argument('--generate_demands', dest='generate_demands', action='store', default=False, help='type of output file, default = t3d, options = nx')
+
+	parser.add_argument('--access_node_prob', dest='access_prob', action='store', default='1', help='probability of a node to be an access node, default = 1')
+
+	parser.add_argument('--t_rel_prob', dest='t_rel_prob', action='store', default='1', help='probability of a traffic relation between nodes, default = 1')
+	parser.add_argument('--mean_num_flows', dest='mean_num_flows', action='store', default='1', help='average number of flows in a traffic relation, default = 1')
+	parser.add_argument('--max_num_flows', dest='max_num_flows', action='store', default='1', help='maximum number of flows in a traffic relation, default = 1')
+	parser.add_argument('--link__to_t_rel_ratio', dest='l_to_t_rel_prob', action='store', default='1', help='ratio between avg link capa and sum of flow rates in a traffic relation, default = 1')
+
+
+
 
 	args = parser.parse_args()    
 	if len(sys.argv)==1:
