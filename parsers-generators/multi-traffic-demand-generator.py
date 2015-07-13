@@ -3,11 +3,11 @@ import os
 
 def single_execution(): 
 
-	base_filename = "flow_cata_topo_%s_%s_%s_%s_%s_%s" \
-	%(topology, access_node_prob, t_rel_prob, mean_num_flows, max_num_flows, link__to_t_rel_ratio)
+	base_filename = "flow_cata_topo_%s_%s_%s_%s_%s_%s_seed%s" \
+	%(topology, access_node_prob, t_rel_prob, mean_num_flows, max_num_flows, link__to_t_rel_ratio, my_seed)
 
-	command = "python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d --access_node_prob %s --t_rel_prob %s --mean_num_flows %s --max_num_flows %s --link__to_t_rel_ratio %s > %s/%s.info" \
-	%(access_node_prob, t_rel_prob, mean_num_flows, max_num_flows, link__to_t_rel_ratio, folder, base_filename)
+	command = "python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d --access_node_prob %s --t_rel_prob %s --mean_num_flows %s --max_num_flows %s --link__to_t_rel_ratio %s --seed %s > %s/%s.info" \
+	%(access_node_prob, t_rel_prob, mean_num_flows, max_num_flows, link__to_t_rel_ratio, my_seed, folder, base_filename)
 
 	print command
 
@@ -21,6 +21,7 @@ def single_execution():
 
 folder = "flow_catalogues"
 topology = "colt153"
+my_seed = 69
 
 access_node_prob = 0.4
 t_rel_prob = 0.2
@@ -28,14 +29,21 @@ mean_num_flows = 4
 max_num_flows = 10
 link__to_t_rel_ratio = 10
 
-for i in [10, 20, 40, 80]:
+
+#for i in [10, 20, 40, 80]:    #first set
+for i in [60, 70, 80]:         #second set
 	link__to_t_rel_ratio = i
-	single_execution()
+	for j in [69, 70, 71]:
+		my_seed = j
+		single_execution()
 
 access_node_prob = 0.8
-for i in [10, 20, 40, 80, 160, 320]:
+#for i in [10, 20, 40, 80, 160, 320]:   #first set
+for i in [240, 280, 320]:               #second set
 	link__to_t_rel_ratio = i
-	single_execution()
+	for j in [69, 70, 71]:
+		my_seed = j
+		single_execution()
 
 
 

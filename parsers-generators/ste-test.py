@@ -245,7 +245,9 @@ def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 
 def run_command(args_in):
 
-	my_seed = 69
+	
+	my_seed = int(args_in.random_seed)
+	print "SEED : ", my_seed
 	random.seed(my_seed)	   #reset random seed to have repeteable output 
 	np.random.seed(my_seed)    #reset random seed for numpy library (used in  geometric distribution)
 
@@ -326,7 +328,7 @@ def parse_cmd_line():
 	parser.add_argument('--max_num_flows', dest='max_num_flows', action='store', default='1', help='maximum number of flows in a traffic relation, default = 1')
 	parser.add_argument('--link__to_t_rel_ratio', dest='l_to_t_rel_prob', action='store', default='1', help='ratio between avg link capa and sum of flow rates in a traffic relation, default = 1')
 
-
+	parser.add_argument('--seed', dest='random_seed', action='store', default='69', help='seed for the random number generato, default = 69')
 
 
 	args = parser.parse_args()    
