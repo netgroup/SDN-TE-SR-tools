@@ -335,11 +335,13 @@ if __name__ == '__main__':
 	factory = TopologyBuilderFactory()
 	builder = factory.getTopologyBuilder(type_builder, data)
 	builder.generate()
-	if builder.is_connected():
-		builder.nx_topoPrint()
-		builder.serialize()
-	else:
+	while not builder.is_connected():
 		print "Topology is not strongly connected"
+		builder.generate()
+	
+	#builder.nx_topoPrint()
+	print "Generated a connected topology (saved in nodes.json and links.json)"
+	builder.serialize()
 
 
 
