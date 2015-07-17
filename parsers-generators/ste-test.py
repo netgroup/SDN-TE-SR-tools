@@ -287,6 +287,25 @@ def run_command(args_in):
 		dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
 		print dict
 
+	if args_in.file_type_in=='nx_json':
+		with open("nodes.json") as data_file:    
+			nodes_file = json.load(data_file)
+		#print json.dumps(nodes_file)
+		for node_couple in nodes_file:
+			#print node_couple[0]
+			nx_topology_new.add_node(node_couple[0], attr_dict=node_couple[1])
+
+		with open("links.json") as data_file:    
+			links_file = json.load(data_file)
+		#print json.dumps(links_file)
+		for link_triple in links_file:
+			#print link_triple[2]['id']
+			nx_topology_new.add_edge(link_triple[0], link_triple[1], key=link_triple[2]['id'])
+			for key_dict in link_triple[2]:
+				#print key_dict
+				nx_topology_new[link_triple[0]][link_triple[1]][link_triple[2]['id']][key_dict]=link_triple[2][key_dict]
+
+
 	if args_in.file_type_in=='t3d':
 		t3d_json_2_nx(nx_topology_new, args_in.file)
 

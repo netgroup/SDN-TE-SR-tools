@@ -3,6 +3,7 @@
 import os
 import sys
 from pprint import pprint
+import argparse
 import json
 import networkx as nx
 import siphash
@@ -82,7 +83,8 @@ class ErdosRenyiTopologyBuilder(RandomTopologyBuilder):
 
 		nodes = []
 		for node in erdos.nodes():
-			nodes.append(node+1)
+			#SSnodes.append(node+1)
+			nodes.append(str(node+1))
 
 		self.nx_topology.add_nodes_from(nodes)
 
@@ -93,13 +95,15 @@ class ErdosRenyiTopologyBuilder(RandomTopologyBuilder):
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#SSself.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n1), str(n2), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#SSself.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n2), str(n1), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1	
 
@@ -131,7 +135,8 @@ class WaxmanTopologyBuilder(RandomTopologyBuilder):
 
 		nodes = []
 		for node in waxman.nodes():
-			nodes.append(node+1)
+			#SS nodes.append(node+1)
+			nodes.append(str(node+1))
 
 		self.nx_topology.add_nodes_from(nodes)
 
@@ -142,13 +147,15 @@ class WaxmanTopologyBuilder(RandomTopologyBuilder):
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#SSself.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n1), str(n2), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#self.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n2), str(n1), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1	
 
@@ -176,7 +183,8 @@ class BarabasiAlbertTopologyBuilder(RandomTopologyBuilder):
 
 		nodes = []
 		for node in barabasi_albert.nodes():
-			nodes.append(node+1)
+			#SSnodes.append(node+1)
+			nodes.append(str(node+1))
 
 		self.nx_topology.add_nodes_from(nodes)
 
@@ -187,13 +195,15 @@ class BarabasiAlbertTopologyBuilder(RandomTopologyBuilder):
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#SSself.nx_topology.add_edge(n1, n2, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n1), str(n2), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1
 			self.sip.update(str(index))
 			id_ = str(self.sip.hash())
 
-			self.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			#SSself.nx_topology.add_edge(n2, n1, capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
+			self.nx_topology.add_edge(str(n2), str(n1), capacity=self.DEFAULT_SPEED, allocated=0.0, src_port="", dst_port="", src_port_no="", dst_port_no="", src_mac="", dst_mac="", flows=[], id=id_) 
 
 			index = index + 1	
 	 
@@ -325,15 +335,29 @@ class RyuTopologyBuilder(CtrlTopologyBuilder):
 			outfile.close()		
 		
 
-if __name__ == '__main__':
+def run_command(args_in):
+
+	#my_seed = None
+	if args_in.random_seed == None:
+		random_seed = None
+	else:
+		random_seed = int(args_in.random_seed)
+
+	print "SEED : ", random_seed
+	num_nodes = int(args_in.num_nodes)
+	connections = int(args_in.connections)
+
 	#type_builder = "erdos-renyi"
-	#data = [153, 0.05, None, False]	
+	#data = [num_nodes, 0.05, random_seed, False]	
+
 	#type_builder = "waxman"
-	#data = [153, 0.4, 0.1, 1000, (-90, -180, 90, 180)]	
-	type_builder = "barabasi-albert"
-	data = [153, 1, None]
+	#data = [num_nodes, 0.4, 0.1, 1000, (-90, -180, 90, 180)]	
+
+	#type_builder = "barabasi-albert"
+	data = [num_nodes, connections, random_seed]
+	
 	factory = TopologyBuilderFactory()
-	builder = factory.getTopologyBuilder(type_builder, data)
+	builder = factory.getTopologyBuilder(args_in.type_builder, data)
 	builder.generate()
 	while not builder.is_connected():
 		print "Topology is not strongly connected"
@@ -344,4 +368,24 @@ if __name__ == '__main__':
 	builder.serialize()
 
 
+def parse_cmd_line():
+	parser = argparse.ArgumentParser(description="Generates topology according to different models (command line parameters have been linked only for BarabasiAlbert)")
+	parser.add_argument('--model', dest='type_builder', action='store', default='barabasi-albert', help='model type, default = barabasi-albert, options = erdos-renyi waxman')
+	parser.add_argument('--nodes', dest='num_nodes', action='store', default='100', help='number of nodes, default = 100')
+	parser.add_argument('--connections', dest='connections', action='store', default='1', help='number of connections parameter for barabasi-albert model, default = 1')
+	parser.add_argument('--seed', dest='random_seed', action='store', default=None, help='seed for the random number generator, default = None')
 
+
+	args = parser.parse_args()    
+#	if len(sys.argv)==1:
+#		parser.print_help()
+#		sys.exit(1)    
+	return args
+
+if __name__ == '__main__':
+	args = parse_cmd_line()
+	run_command(args)
+
+	#python topologybuilder.py --model barabasi-albert --nodes 153 --connection 1 --seed 69
+	#python topologybuilder.py --model waxman --nodes 153 
+	#python topologybuilder.py --model erdos-renyi --nodes 153 --seed 69
