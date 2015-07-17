@@ -254,6 +254,9 @@ def run_command(args_in):
 
 	nx_topology_new = nx.MultiDiGraph()
 
+	##########################################
+	#import topology phase 
+	##########################################
 
 	if args_in.file_type_in=='graphml':
 
@@ -263,29 +266,6 @@ def run_command(args_in):
 		print "imported a topology from graphml file"
 		print_info(nx_topology_new)
 
-
-		#### randomly adds the key value pair 'is_edge'=True to a subset of nodes (needed to generate traffic demand)
-		(access_nodes, total_nodes) = add_nodes_marks(nx_topology_new, p_mark=float(args_in.access_prob), key_to_add='is_edge')
-		print "number of access nodes ", access_nodes, " (", float(access_nodes)/total_nodes*100, "% )"
-		
-		#del_nodes_marks(nx_topology_new, "is_edge")
-
-		serialize(nx_topology_new)
-	
-
-		#### generates a traffic demand
-		#flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
-		flow_catalogue = build_flows(nx_topology_new,
-									 traffic_rel_probability=float(args_in.t_rel_prob),
-									 avg_num_flows = float(args_in.mean_num_flows),
-									 max_num_flows = int(args_in.max_num_flows),
-									 link_capa_to_traff_rel_ratio=float(args_in.l_to_t_rel_prob)
-									 )
-		serialize_flow_catalogue(flow_catalogue)
-
-		print "generated traffic demands"
-		dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
-		print dict
 
 	if args_in.file_type_in=='nx_json':
 		with open("nodes.json") as data_file:    
@@ -305,12 +285,53 @@ def run_command(args_in):
 				#print key_dict
 				nx_topology_new[link_triple[0]][link_triple[1]][link_triple[2]['id']][key_dict]=link_triple[2][key_dict]
 
+		print "imported a topology from nodes.json and links.json"
+		print_info(nx_topology_new)
+
 
 	if args_in.file_type_in=='t3d':
 		t3d_json_2_nx(nx_topology_new, args_in.file)
 
+		print "imported a topology t3d file"
+		print_info(nx_topology_new)
+
+
+	##########################################
+	# selecting source/destinatio nodes
+	##########################################
+
+	#### randomly adds the key value pair 'is_edge'=True to a subset of nodes (needed to generate traffic demand)
+	(access_nodes, total_nodes) = add_nodes_marks(nx_topology_new, p_mark=float(args_in.access_prob), key_to_add='is_edge')
+	print "number of access nodes ", access_nodes, " (", float(access_nodes)/total_nodes*100, "% )"
+	
+	#del_nodes_marks(nx_topology_new, "is_edge")
+
+	#uncomment this line if you want to output the links.json and node.json
+	#serialize(nx_topology_new)
+
+	##########################################
+	#traffic demand generation phase 
+	##########################################
+
+	#flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
+	flow_catalogue = build_flows(nx_topology_new,
+								 traffic_rel_probability=float(args_in.t_rel_prob),
+								 avg_num_flows = float(args_in.mean_num_flows),
+								 max_num_flows = int(args_in.max_num_flows),
+								 link_capa_to_traff_rel_ratio=float(args_in.l_to_t_rel_prob)
+								 )
+	serialize_flow_catalogue(flow_catalogue)
+
+	print "generated traffic demands"
+	dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
+	print dict
+
 
 	#print_links(nx_topology_new)
+
+	##########################################
+	#topology output/convertion phase
+	##########################################
 	
 	if args_in.file_type_out=='t3d':
 		nx_2_t3d_json(nx_topology_new, 'out.t3d')

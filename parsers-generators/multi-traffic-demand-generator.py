@@ -64,15 +64,17 @@ link__to_t_rel_ratio = 10
 for i in [10, 20, 40, 80]:    #first set
 #for i in [60, 70, 80]:         #second set
 	link__to_t_rel_ratio = i
-	for j in [69, 70, 71]:
+	#for j in [69, 70, 71]:
+	for j in [69]:
 		my_seed = j
-		single_execution()
+#		single_execution()
 
 access_node_prob = 0.8
-for i in [10, 20, 40, 80, 160, 320]:   #first set
-#for i in [240, 280, 320]:               #second set
+#for i in [10, 20, 40, 80, 160, 320]:   #first set
+for i in [80, 120, 160, 200, 240, 280, 320, 360]:               #second set
 	link__to_t_rel_ratio = i
-	for j in [69, 70, 71]:
+	#for j in [69, 70, 71]:
+	for j in [69]:
 		my_seed = j
 		single_execution()
 
