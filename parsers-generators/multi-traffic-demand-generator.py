@@ -50,7 +50,7 @@ file_in_type = "nx_json"
 file_in_name = ""
 
 #topology = "colt153"
-topology = "BA_153_1_69"
+topology = "BA_%s_%s_69" %(num_nodes,connection)
 
 my_seed = 69
 
@@ -71,7 +71,7 @@ for i in [10, 20, 40, 80]:    #first set
 
 access_node_prob = 0.8
 #for i in [10, 20, 40, 80, 160, 320]:   #first set
-for i in [80, 120, 160, 200, 240, 280, 320, 360]:               #second set
+for i in [40, 60, 80, 120, 160, 200, 240, 280, 320, 360, 400, 520, 640]:               #second set
 	link__to_t_rel_ratio = i
 	#for j in [69, 70, 71]:
 	for j in [69]:
@@ -80,5 +80,8 @@ for i in [80, 120, 160, 200, 240, 280, 320, 360]:               #second set
 
 
 # python multi-traffic-demand-generator.py
+# the generated topology and flows are available in flow_catalogue subfolder
+
 
 #	python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10 > flow_catalogues/blabla.info 
+
