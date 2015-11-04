@@ -47,6 +47,9 @@ from timer_cspf_euristico import *
 from timer_cspf import *
 from Graphml2nx import *
 from Nx2json import * 
+from Ford_Fulkerson_Algorithm import *
+from test_load_network import *
+from mod_string import *
 
 
 
@@ -57,6 +60,9 @@ CONFIDENCE = 5
 CTRL = 'ryu'
 n_nodi_core = 0
 n_nodi_di_bordo = 0
+num_random_rep = 30            #numero di ripetizioni casuali di ingresso uscita per il max flow
+perc = 0.6                  
+
 
 # Set the links weights considering the availale capcity and the allocated capacity
 def set_weights_on_available_capa(BIGK, nx_multidigraph):
@@ -292,7 +298,7 @@ def flow_allocator(ctrl_endpoint):
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
-def simulate_flow_allocator(nx_topology, data):
+def simulate_flow_allocator(nx_topology, topo):
 
 
 	# BIGK is the max available capacity
@@ -310,9 +316,9 @@ def simulate_flow_allocator(nx_topology, data):
 
 	flows_file=open("flussi.out","w")
 
-	Risultati_Test = open("Risultati_Test.out","w")
+	Risultati_Test = open("Colt("+str(perc)+").out","w")
 
-	flow_catalogue_new = build_flows(nx_topology, flows_file, Risultati_Test, data)				# richiama la funzione che genera i flussi 
+	flow_catalogue_new = build_flows(nx_topology, flows_file, perc, Risultati_Test, topo)				# richiama la funzione che genera i flussi 
 
 	# Assign the weights
 	set_weights_on_available_capa(BIGK, nx_topology)  
@@ -323,7 +329,6 @@ def simulate_flow_allocator(nx_topology, data):
 	nx_topology_Json_Serialization(nx_topology, "Links.json")	
 
 	flow_Catalogue_Json_Serialization(flow_catalogue_new, 'flow_catalogue.json')
-
 
 	nx_topology_sp = nx_topology.copy()
 	nx_topology_cspfe = nx_topology.copy()
@@ -340,19 +345,30 @@ def simulate_flow_allocator(nx_topology, data):
 
 	
 	sh_path_file=open("shortest_path.out","w")
-	time_shortestpath(nx_topology_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file, Risultati_Test)                         #timer per algoritmo di shortest path
+	#time_shortestpath(nx_topology_sp, flow_catalogue_new_sp, nx_flows_sp, sh_path_file, Risultati_Test)                         #timer per algoritmo di shortest path
 	
-	cspf_he_file=open("CSPF_euristico.out","w")
+	cspf_he_file=open("CSPF_euristico_Iterazioni("+str(perc)+").out","w")
 	time_cspf_heuristic(nx_topology_cspfe, flow_catalogue_new_cspfe, nx_flows_cspfe, BIGK, cspf_he_file, Risultati_Test)         #timer per algoritmo cspf euristico
 	
 	cspf_file=open("CSPF.out","w")
-	time_cspf(nx_topology_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file, Risultati_Test)				       #timer per algoritmo cspf					
-	
+	#time_cspf(nx_topology_cspf, flow_catalogue_new_cspf,nx_flows_cspf, BIGK, cspf_file, Risultati_Test)				       #timer per algoritmo cspf					
+		
+	#Ford_Fulkerson_Test = open("Maxflow("+str(perc)+").out","w")
+	#list_value = Ford_Fulkerson("indipendente",nx_topology, nx_flows, num_random_rep, Ford_Fulkerson_Test)
+	#list_value = Ford_Fulkerson("dipendente",nx_topology, nx_flows, num_random_rep, Ford_Fulkerson_Test)   # Per avere il flusso massimo in modo che ogni flusso sia dipendente da quello precedente
 
+	#Risultato_Test = open("Percentuale flussi allocati colt(epsilon costante e perc="+str(perc)+").out","w")
+	#Risultato_Test.write(str(topo)+"\n\n\n")
+	#Test_Load_Network(nx_topology, flow_catalogue_new, list_value, Risultato_Test)
+	#os.system("sendmail -t < /home/user/email.txt")
 	
 	# Assigns the flows
-	flow_assignment(nx_topology, flow_catalogue_new, nx_flows, BIGK)       
-
+	#flow_assignment(nx_topology, flow_catalogue_new, nx_flows, BIGK) 
+	
+	if perc<=1.8:
+		print "perc = "+str(perc+0.1) 
+		modifica(perc)      
+		
 
 def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 
@@ -364,18 +380,18 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 			#print(list(work_nx_multidigraph.edges_iter(data=True)))
 			size = flow_dict['out']['size']
 			prune_graph_by_available_capacity(work_nx_multidigraph, size)
-			print "Prune Graph"
-			print(list(work_nx_multidigraph.edges_iter(data=True)))
+			#print "Prune Graph"
+			#print(list(work_nx_multidigraph.edges_iter(data=True)))
 			try:
 				path = nx.dijkstra_path(work_nx_multidigraph, src, dst,'weight')
-				print "path: "+str(path)
+				#print "path: "+str(path)
 				allocate_flow (nx_topology, path, size, "%s-out" % flow_id)
 				store_path (nx_flows, src, dst, flow_id, path)
 				set_allocated (flow_catalogue, flow_id, "out", allocated = True)
 				set_weights_on_available_capa(BIGK, nx_topology)
 			except nx.NetworkXNoPath:
 				path = []
-				print "NON C'E' UN PATH"
+				#print "NON C'E' UN PATH"
 				continue
 
 		if 'in' in flow_dict and 'size' in flow_dict['in']:
@@ -404,7 +420,7 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 			total_size = (float(flow_dict['out']['size'])*S/L) + total_size	
 		if 'in' in flow_dict and flow_dict['in']['allocated']:
 			total_size = (float(flow_dict['in']['size'])*S/L) + total_size
-
+	'''		
 	print('\nTotal size:')
 	print(total_size)
 	print '###################################', '\n'
@@ -422,14 +438,14 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 	print "#############################################################", "\n"
 	print "#############################################################", "\n"
 	print "#############################################################", "\n"
-
+	'''
 	if total_size <= 0.0:
 		print "\n", "No Flows"
 		return
 
 	# Assignment Phase
 	Tglob = calculate_t_s(total_size, nx_topology)
-	print 'Tglob:', Tglob, "\n"
+	#print 'Tglob:', Tglob, "\n"
 	Tfin = Tglob
 
 	while True:
@@ -439,16 +455,16 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 				size = data['size']
 				allocated = data['allocated']			
 				if allocated:
-					print "Tfin:", Tfin, "\n"
+					#print "Tfin:", Tfin, "\n"
 					work_nx_topology = nx_topology.copy()
 					if direction == 'out':
 						path = nx_flows.edge[src][dst][flow_id]['path']
 					elif direction == 'in':
 						path = nx_flows.edge[dst][src][flow_id]['path']
-					print "Old Path:", path
-					print('\nnx_multidigraph edges pre-rerouting')
-					print(list(work_nx_topology.edges_iter(data=True)))
-					print "#############################################################", "\n"
+					#print "Old Path:", path
+					#print('\nnx_multidigraph edges pre-rerouting')
+					#print(list(work_nx_topology.edges_iter(data=True)))
+					#print "#############################################################", "\n"
 					if direction == 'out':
 						de_allocate_flow (work_nx_topology, path, size, "%s-out" % flow_id)
 					elif direction == 'in':
@@ -457,25 +473,25 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 					work_nx_topology2 = work_nx_topology.copy()
 					prune_graph_by_available_capacity(work_nx_topology, size)
 					calculate_l(total_size, work_nx_topology, S)
-					print('\nPruned Topology')
-					print(list(work_nx_topology.edges_iter(data=True)))
-					print "#############################################################", "\n"
+					#print('\nPruned Topology')
+					#print(list(work_nx_topology.edges_iter(data=True)))
+					#print "#############################################################", "\n"
 					try:
 						if direction == 'out':
 							new_path = nx.dijkstra_path(work_nx_topology, src, dst, 'l_value')
 						elif direction == 'in':
 							new_path = nx.dijkstra_path(work_nx_topology, dst, src, 'l_value')
-						print "New Path :", new_path
+						#print "New Path :", new_path
 						if direction == 'out':
 							allocate_flow (work_nx_topology2, new_path, size, "%s-out" % flow_id)
 						elif direction == 'in':
 							allocate_flow (work_nx_topology2, new_path, size, "%s-in" % flow_id)						
 						set_weights_on_available_capa(BIGK, work_nx_topology2)
-						print('\nnx_multidigraph edges post-rerouting')
-						print(list(work_nx_topology2.edges_iter(data=True)))
-						print "#############################################################", "\n"
+						#print('\nnx_multidigraph edges post-rerouting')
+						#print(list(work_nx_topology2.edges_iter(data=True)))
+						#print "#############################################################", "\n"
 						t = calculate_t_s(total_size, work_nx_topology2)
-						print "T:", t
+						#print "T:", t
 						if(t < Tfin):
 							if direction == 'out':
 								de_allocate_flow (nx_topology, path, size, "%s-out" % flow_id)
@@ -490,7 +506,7 @@ def flow_assignment(nx_topology, flow_catalogue, nx_flows, BIGK):
 					except nx.NetworkXNoPath:
 						new_path = []	
 
-					print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "\n"
+					#print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "\n"
 					
 
 		if Tfin <= Tglob and Toldfin == Tfin:

@@ -78,7 +78,10 @@ def time_cspf_heuristic(nx_topology, flow_catalogue, nx_flows, BIGK, out_file, R
 	Tfin = Tglob
 
 	list_path = []
-	out_file.write("Flussi e relativi path calcolati a fine algoritmo sono: \n")
+	out_file.write("Iterazioni e Tglob \n")
+	out_file.write("il Tglob prima dell'ottimizzazione e': Tglob="+str(Tglob)+"\n")
+	cont_iterazioni=0
+	print "Assignment Phase"
 	while True:
 		Toldfin = Tfin
 		del list_path[0:]
@@ -128,16 +131,17 @@ def time_cspf_heuristic(nx_topology, flow_catalogue, nx_flows, BIGK, out_file, R
 					except nx.NetworkXNoPath:
 						new_path = []	
 
-
+		cont_iterazioni= cont_iterazioni+1		
 		if Tfin <= Tglob and Toldfin == Tfin:
+			out_file.write("iterazione n "+str(cont_iterazioni)+" Tglob="+str(Tfin)+"\n")
 			break
 
 	tempo_finale=time.time()
 
-	 
+	''' 
 	for i in list_path:
 		out_file.write(str(i)+"\n")
-
+	'''	
 	perc_capa = 0	
 	Nlink = nx_topology.size()
 	cap_allocated = 0
@@ -161,7 +165,7 @@ def time_cspf_heuristic(nx_topology, flow_catalogue, nx_flows, BIGK, out_file, R
 
 	Risultati_Test.write("Utilizzando l'algoritmo CSPF Euristico vengono allocati "+str(count_flows)+" flussi su "+str(len(flow_catalogue))+"\n")
 	Risultati_Test.write("I link totali nella topologia sono "+str(Nlink)+" e mediamente sono carichi al "+str((perc_capa/Nlink)*100)+"%\n")
-	Risultati_Test.write("Il link piu' carico e' quello tra i nodi "+str(src_id)+" e "+str(dst_id)+" ed ha allocato "+str(cap_allocated)+ " su "+str(cap_tot)+"\n")
+	Risultati_Test.write("Il link piu' carico e' quello tra i nodi "+str(src_id)+" e "+str(dst_id)+" ed ha allocato "+str(cap_allocated)+ " Mbps su "+str(cap_tot)+" Mbps\n")
 	Risultati_Test.write("Al termine dell'algoritmo il Tglob e': "+str(Tfin)+"\n")
 	Risultati_Test.write("L'algoritmo di CSPF viene eseguito in "+str(tempo_finale-tempo_iniziale)+" secondi \n")
 	Risultati_Test.write("\n")

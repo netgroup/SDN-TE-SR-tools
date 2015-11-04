@@ -102,9 +102,9 @@ def time_cspf(nx_topology, flow_catalogue, nx_flows, BIGK, out_file, Risultati_T
 	out_file.write("La somma totale dei flussi (total_size) e' "+str(total_size)+"\n")
 	out_file.close()
 
-	Risultati_Test.write("Utilizzando l'algoritmo CSPF vengono allocati "+str(count_flows)+" flussi su "+str(len(flow_catalogue))+"\n")
+	Risultati_Test.write("Utilizzando l'algoritmo CSPF vengono allocati "+str(count_flows)+" flussi su "+str(len(flow_catalogue))+"  la probabilita' di rifiuto e': "+str((len(flow_catalogue)-count_flows)/float(len(flow_catalogue)))+"\n")
 	Risultati_Test.write("I link totali nella topologia sono "+str(Nlink)+" e mediamente sono carichi al "+str((perc_capa/Nlink)*100)+"%\n")
-	Risultati_Test.write("Il link piu' carico e' quello tra i nodi "+str(src_id)+" e "+str(dst_id)+" ed ha allocato "+str(cap_allocated)+ " su "+str(cap_tot)+"\n")
+	Risultati_Test.write("Il link piu' carico e' quello tra i nodi "+str(src_id)+" e "+str(dst_id)+" ed ha allocato "+str(cap_allocated)+ " Mbps su "+str(cap_tot)+" Mbps\n")
 	Risultati_Test.write("Al termine dell'algoritmo il Tglob e': "+str(Tglob)+"\n")
 	Risultati_Test.write("L'algoritmo di CSPF viene eseguito in "+str(tempo_finale-tempo_iniziale)+" secondi \n")
 	Risultati_Test.write("\n")
