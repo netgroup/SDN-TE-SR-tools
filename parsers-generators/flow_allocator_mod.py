@@ -45,8 +45,8 @@ from distribuzioni import *
 from timer_shortestpath import *
 from timer_cspf_euristico import *
 from timer_cspf import *
-from Graphml2nx import *
-from Nx2json import * 
+from graphml2nx import *
+from nx2json import * 
 from Ford_Fulkerson_Algorithm import *
 from test_load_network import *
 from mod_string import *

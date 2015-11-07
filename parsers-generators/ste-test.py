@@ -46,9 +46,9 @@ from distribuzioni import *
 from timer_shortestpath import *
 from timer_cspf_euristico import *
 from timer_cspf import *
-from Graphml2nx_ste import * 
-from Nx2t3d import *
-from Nx2json import *
+from graphml2nx_ste import * 
+from nx2t3d import *
+from nx2json import *
 from demand_gen_ste import *
 
 
