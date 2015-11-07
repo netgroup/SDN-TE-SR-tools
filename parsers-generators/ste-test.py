@@ -28,6 +28,10 @@
 
 #######################################################################################################
 
+"""
+Parses and transforms topologies between different formats - Generates traffic demands
+"""
+
 import os
 import json
 import inspect
@@ -57,14 +61,17 @@ CTRL = 'ryu'
 n_nodi_core = 0
 n_nodi_di_bordo = 0
 
-# Set the links weights considering the availale capcity and the allocated capacity
+
 def set_weights_on_available_capa(BIGK, nx_multidigraph):
+	"""Set the links weights considering the availale capcity and the allocated capacity"""
+
 	for edge in nx_multidigraph.edges_iter(data = True):
 		edge[2]['weight'] = float(BIGK)/(edge[2].get('capacity',BIGK) - edge[2].get('allocated',0))
 	return
 
-# Transform the catolgue of the flows in a nx multidigraph
 def multidigraph_from_flow_catalogue (fc_dict):
+	"""Transform the catolgue of the flows in a nx multidigraph"""
+
 	nx_flows = nx.MultiDiGraph()
 	for flow_id, (src, dst, flow_dict) in fc_dict.iteritems():
 		if 'out' in flow_dict and 'size' in flow_dict['out']:
@@ -73,8 +80,11 @@ def multidigraph_from_flow_catalogue (fc_dict):
 				nx_flows.add_edge(dst, src, flow_id, {'size':flow_dict['in']['size'], 'path':[]})
 	return nx_flows
 
-# Prune from the topologies all the links that do not have enough available capacity to support the traffic relation (size is the bitrate)
+ 
 def prune_graph_by_available_capacity(nx_multidigraph, size, tolerance = False,):
+	"""Prune from the topologies all the links that do not have enough available capacity
+	to support the traffic relation (size is the bitrate)
+	"""
 	
 	for edge in nx_multidigraph.edges_iter(data = True):
 		if 'capacity' in edge[2]:
@@ -105,8 +115,8 @@ def set_allocated (flow_catalogue, flow_id, direction, allocated = True):
 	if direction == 'in':
 		flow_catalogue[flow_id][2]['in']['allocated']=allocated
 	
-# Calculate T in seconds
 def calculate_t_s(total_capacity, nx_multidigraph):
+	"""Calculates T in seconds"""
 	t = 0
 	temp = 0
 	for edge in nx_multidigraph.edges_iter(data = True):
@@ -136,8 +146,9 @@ print(nx_topology[1][3])   # Print the map of the link (1,3)
 print(nx_topology.edge[2])   # Print the adjancies of the node 2
 """
 
-# Retrieves the flows from the vll_pusher.cfg and generate the flow_catalogue
 def retrieve_flows(controllerRestIP):
+	"""Retrieves the flows from the vll_pusher.cfg and generates the flow_catalogue
+	"""
 
 	global pusher_cfg
 	
@@ -203,8 +214,9 @@ def flow_allocator(ctrl_endpoint):
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
 
-#generates links.json and nodes.json
+
 def serialize(nx_topology_new):
+	"""generates links.json and nodes.json"""
 
 	with open('links.json', 'w') as outfile:
 		json.dump(nx_topology_new.edges(data=True), outfile, indent=4, sort_keys=True)
@@ -214,8 +226,8 @@ def serialize(nx_topology_new):
 		json.dump(nx_topology_new.nodes(data=True), outfile, indent=4, sort_keys=True)
 		outfile.close()	
 
-#generates flow_catalogue.json
 def serialize_flow_catalogue(flow_catalogue):
+	"""generates flow_catalogue.json"""
 	with open('flow_catalogue.json', 'w') as outfile:
 		json.dump(flow_catalogue, outfile, indent=4, sort_keys=True)
 		outfile.close()		
