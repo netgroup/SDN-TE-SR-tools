@@ -60,6 +60,7 @@ CONFIDENCE = 5
 CTRL = 'ryu'
 n_nodi_core = 0
 n_nodi_di_bordo = 0
+FLOW_CATALOGUE_FILENAME = 'flow_catalogue.json'
 
 
 def set_weights_on_available_capa(BIGK, nx_multidigraph):
@@ -227,8 +228,8 @@ def serialize(nx_topology_new):
 		outfile.close()	
 
 def serialize_flow_catalogue(flow_catalogue):
-	"""generates flow_catalogue.json"""
-	with open('flow_catalogue.json', 'w') as outfile:
+	"""generates flow catalogue (flow_catalogue.json)"""
+	with open(FLOW_CATALOGUE_FILENAME, 'w') as outfile:
 		json.dump(flow_catalogue, outfile, indent=4, sort_keys=True)
 		outfile.close()		
 
@@ -279,7 +280,7 @@ def run_command(args_in):
 		print_info(nx_topology_new)
 
 
-	if args_in.file_type_in=='nx_json':
+	if args_in.file_type_in=='nx':
 		with open("nodes.json") as data_file:    
 			nodes_file = json.load(data_file)
 		#print json.dumps(nodes_file)
@@ -309,34 +310,37 @@ def run_command(args_in):
 
 
 	##########################################
-	# selecting source/destinatio nodes
+	# selecting source/destination nodes
 	##########################################
 
-	#### randomly adds the key value pair 'is_edge'=True to a subset of nodes (needed to generate traffic demand)
-	(access_nodes, total_nodes) = add_nodes_marks(nx_topology_new, p_mark=float(args_in.access_prob), key_to_add='is_edge')
-	print "number of access nodes ", access_nodes, " (", float(access_nodes)/total_nodes*100, "% )"
-	
-	#del_nodes_marks(nx_topology_new, "is_edge")
+	if args_in.select_edge_nodes:
+		#### randomly adds the key value pair 'is_edge'=True to a subset of nodes (needed to generate traffic demand)
+		(access_nodes, total_nodes) = add_nodes_marks(nx_topology_new, p_mark=float(args_in.access_prob), key_to_add='is_edge')
+		print "number of access nodes ", access_nodes, " (", float(access_nodes)/total_nodes*100, "% )"
+		
+		#del_nodes_marks(nx_topology_new, "is_edge")
 
-	#uncomment this line if you want to output the links.json and node.json
-	#serialize(nx_topology_new)
+		#uncomment this line if you want to output the links.json and node.json
+		#serialize(nx_topology_new)
 
 	##########################################
 	#traffic demand generation phase 
 	##########################################
 
-	#flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
-	flow_catalogue = build_flows(nx_topology_new,
-								 traffic_rel_probability=float(args_in.t_rel_prob),
-								 avg_num_flows = float(args_in.mean_num_flows),
-								 max_num_flows = int(args_in.max_num_flows),
-								 link_capa_to_traff_rel_ratio=float(args_in.l_to_t_rel_prob)
-								 )
-	serialize_flow_catalogue(flow_catalogue)
+	if args_in.generate_demands:
 
-	print "generated traffic demands"
-	dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
-	print dict
+		#flow_catalogue = build_flows(nx_topology_new, traffic_rel_probability=0.2, avg_num_flows = 4, max_num_flows = 10, link_capa_to_traff_rel_ratio=10)
+		flow_catalogue = build_flows(nx_topology_new,
+									 traffic_rel_probability=float(args_in.t_rel_prob),
+									 avg_num_flows = float(args_in.mean_num_flows),
+									 max_num_flows = int(args_in.max_num_flows),
+									 link_capa_to_traff_rel_ratio=float(args_in.l_to_t_rel_prob)
+									 )
+		serialize_flow_catalogue(flow_catalogue)
+
+		print "generated traffic demands"
+		dict=get_flow_catalogue_stats(flow_catalogue, access_nodes)
+		print dict
 
 
 	#print_links(nx_topology_new)
@@ -349,29 +353,33 @@ def run_command(args_in):
 		nx_2_t3d_json(nx_topology_new, 'out.t3d')
 		print "converted topology in .t3d format"
 
+	if args_in.file_type_out=='nx':
 
-	#generate_flows(nx_topology_new, edge_nodes_fraction)
+		#output the links.json and node.json
+		serialize(nx_topology_new)
+		print "serialized topology in links.json and node.json"
+
 
 
 
 	#t3d_json_2_nx(nx_topology_new, 'out.t3d')
-
 
 	#add_edge_nodes (nx_topology_new)
 	#print_links(nx_topology_new)
 
 	#flow_allocator(args.controllerRestIp)
 
-# python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10
-
+# python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d 
+# python ste-test.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out nx --select_edge_nodes --generate_demands --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10  
 
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description="Parses and transforms topologies between different formats - Generates traffic demands")
 	#parser.add_argument('--controller', dest='controllerRestIp', action='store', default='localhost:8080', help='controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
 	parser.add_argument('--f', dest='file', action='store', help='input file to parse')
-	parser.add_argument('--in', dest='file_type_in', action='store', default='graphml', help='type of input file, default = graphml, options = t3d')
+	parser.add_argument('--in', dest='file_type_in', action='store', default='graphml', help='type of input file, default = graphml, options = t3d, nx')
 	parser.add_argument('--out', dest='file_type_out', action='store', default='t3d', help='type of output file, default = t3d, options = nx')
-	#parser.add_argument('--generate_demands', dest='generate_demands', action='store', default=False, help='type of output file, default = t3d, options = nx')
+	parser.add_argument('--generate_demands', dest='generate_demands', action='store_true', help='used to generate the traffic demands')
+	parser.add_argument('--select_edge_nodes', dest='select_edge_nodes', action='store_true', help='marks edge nodes (needed to generate the traffic demands)')
 
 	parser.add_argument('--access_node_prob', dest='access_prob', action='store', default='1', help='probability of a node to be an access node, default = 1')
 
