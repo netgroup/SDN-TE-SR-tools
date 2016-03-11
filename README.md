@@ -15,7 +15,11 @@ It is a collection of tools for:
 We consider two examples:
 ## Examples
 
-### Large scale topology (no actual SR path deployment in the emulator)
+### Small scale topology (Segment Routing paths deployment in the emulator)
+
+In this example we parse a topology generated with Topology3D GUI, extract the set of flows (Virtual Leased Lines), allocate a Segment Routing path for each flow and then deploy the SR path on the Mininet emulator that emulates the topology.
+
+### Large scale topology (no actual Segment Routing paths deployment in the emulator)
 
 In this example we parse a graphml file that represents a large scale topology (>100 nodes), select a subset of nodes as edge nodes, generate the traffic demands (a set of flows among the edge nodes). Then we use a classical Traffic Engineering approach to select TE paths for the flows and then a optimal Segment Routing allocation algorithm to allocate SR path. We are able to evaluate percentage of allocated and rejected flows and metrics about the Segment Routing paths. We are not deploying the SR patch, because the topology is too big to be emulated in the Mininet emulator.
 
