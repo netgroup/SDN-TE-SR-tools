@@ -1,6 +1,33 @@
-#########################
+#######################################################################################################
 # nx2t3d.py
-#########################
+#
+# Copyright (C) 2015 Pier Luigi Ventre - (Consortium GARR and University of Rome "Tor Vergata")
+# Copyright (C) 2015 Stefano Salsano - (CNIT and University of Rome "Tor Vergata")
+# www.garr.it - www.uniroma2.it/netgroup - www.cnit.it
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# te traffic engineering
+#
+# @author Pier Luigi Ventre <pl.ventre@gmail.com>
+# @author Stefano Salsano <stefano.salsano@uniroma2.it>
+
+#######################################################################################################
+
+"""
+Converts among Networkx multidigraph and T3D formats
+"""
+
 
 import os
 import json
@@ -24,13 +51,14 @@ LINK_TYPE_KEY = 'view'     #new version
 NODE_TYPE_KEY = 'type'     #new version
 
 
-# converts from a Networkx multidigraph into a T3D JSON file
-# if defa_node_type is !="" adds a default node type
-# if defa_link_type is !="" adds a default link type
-# if add_link_id is True, if there is no LINK_ID_KEY adds a unique link_id for each link (the id is unique among all links in the graph)
-# the unique link is taken from the key that identifies the link among the multilinks, but it is checked that it is unique
 
 def nx_2_t3d_dict(nx_topology_new, defa_node_type="", defa_link_type="", add_link_id=False):
+	"""converts from a Networkx multidigraph into a T3D dictionary (returns the dictionary)
+	if defa_node_type is !="" adds a default node type
+	if defa_link_type is !="" adds a default link type
+	if add_link_id is True, if there is no LINK_ID_KEY adds a unique link_id for each link (the id is unique among all links in the graph)
+	the unique link is taken from the key that identifies the link among the multilinks, but it is checked that it is unique
+	"""
 
 
 	nodes_dict = {}
@@ -99,12 +127,18 @@ def nx_2_t3d_json(nx_topology_new, json_out_file):
 
 
 def t3d_json_2_nx(nx_topology_new, json_file_in):
+	"""converts from a T3D JSON file to a Networkx multidigraph 
+	if there is no LINK_ID_KEY or it is the empty string, it adds a unique link_id for each link (the id is unique among all links in the graph)
+	the unique link correspond to the key that identifies the link among the multilinks
+	"""
+
 	if json_file_in == None:
 	   sys.exit('\n\tNo input file was specified as argument....!')
 	with open(json_file_in) as data_file:    
 		t3d = json.load(data_file)
 
-	nx_topology_new= nx.MultiDiGraph()
+	#nx_topology_new= nx.MultiDiGraph() it is not possible to redefine the variable here!!!
+
 	for node_id in t3d['vertices']:
 		#print "node_id: ", node_id
 		#print t3d['vertices'][node_id][VERTEX_INFO_KEY][NODE_TYPE_KEY]
@@ -116,27 +150,37 @@ def t3d_json_2_nx(nx_topology_new, json_file_in):
 			if NODE_TYPE_KEY in t3d['vertices'][node_id][VERTEX_INFO_KEY]:
 				node_dict[NODE_TYPE_KEY]=t3d['vertices'][node_id][VERTEX_INFO_KEY][NODE_TYPE_KEY]
 		nx_topology_new.add_node(node_id, attr_dict=node_dict)
+		#print "ADDED NODE :", node_id
 	
 	for adjacency_id in t3d['edges']:
 		#print "adjacency_id: ", adjacency_id
 		[id_src, id_dest] = adjacency_id.split("&&")
 		#print id_src, id_dest
 		for link_dict in t3d['edges'][adjacency_id]['links']:
-			print link_dict
+			#print link_dict
 			if LINK_ID_KEY in link_dict:
-				link_unique_id = link_dict[LINK_ID_KEY]
+				if link_dict[LINK_ID_KEY] != "":
+					#print "valid link id"
+					link_unique_id = link_dict[LINK_ID_KEY]
+				else:
+					#print "link id is a null string"
+					link_unique_id = get_id()
+					link_dict[LINK_ID_KEY] = link_unique_id
 			else:
+				#print "there is no link id"
 				link_unique_id = get_id()
-				nx_topology_new.add_edge(id_src, id_dest, key=link_unique_id)
+				link_dict[LINK_ID_KEY] = link_unique_id
+
+			nx_topology_new.add_edge(id_src, id_dest, key=link_unique_id)
 
 			for key_dict in link_dict:
 				nx_topology_new[id_src][id_dest][link_unique_id][key_dict]=	link_dict[key_dict]
 
-	print "XXXXXXXXXXXXXXXXXXx"
-	for key, dict in nx_topology_new['134']['17'].iteritems():
-		print key
-		print dict
-		print nx_topology_new['134']['17']['254']
+	#print "XXXXXXXXXXXXXXXXXXx"
+	#for key, dict in nx_topology_new['134']['17'].iteritems():
+	#	print key
+	#	print dict
+	#	print nx_topology_new['134']['17']['254']
 
 
 

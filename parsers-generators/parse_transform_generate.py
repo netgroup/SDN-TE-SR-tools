@@ -214,6 +214,26 @@ def flow_allocator(ctrl_endpoint):
 	# Pushes the flows
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
+def filter_links(nx_topology_new, my_key, my_value):
+	""" filter the links in a nx multidigraph, keeping only the ones that match the filter
+
+	"""
+	remove = []
+	for source,dest,key,d in nx_topology_new.edges_iter(data=True,keys=True):
+		print nx_topology_new[source][dest][key]
+		if my_key in nx_topology_new[source][dest][key]:
+			if nx_topology_new[source][dest][key][my_key]== my_value:
+				#do nothing
+				pass
+			else:
+				remove.append([source,dest,key])
+		else:
+				remove.append([source,dest,key])
+
+	for source,dest,key in remove:
+		print "DELETED : ",source,dest,key
+		del nx_topology_new[source][dest][key]
+
 
 
 def serialize(nx_topology_new):
@@ -355,10 +375,14 @@ def run_command(args_in):
 
 	if args_in.file_type_out=='nx':
 
+
+		if args_in.filters_only_data_link:
+			print "filtered only links with view = Data"
+			filter_links(nx_topology_new, 'view', 'Data')
+
 		#output the links.json and node.json
 		serialize(nx_topology_new)
 		print "serialized topology in links.json and node.json"
-
 
 
 
@@ -371,6 +395,8 @@ def run_command(args_in):
 
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d 
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out nx --select_edge_nodes --generate_demands --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10  
+# python parse_transform_generate.py --f t3d/small-topology.t3d --in t3d --out nx --filters_only_data_link
+
 
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description="Parses and transforms topologies between different formats - Generates traffic demands")
@@ -380,6 +406,8 @@ def parse_cmd_line():
 	parser.add_argument('--out', dest='file_type_out', action='store', default='t3d', help='type of output file, default = t3d, options = nx')
 	parser.add_argument('--generate_demands', dest='generate_demands', action='store_true', help='used to generate the traffic demands')
 	parser.add_argument('--select_edge_nodes', dest='select_edge_nodes', action='store_true', help='marks edge nodes (needed to generate the traffic demands)')
+	parser.add_argument('--filters_only_data_link', dest='filters_only_data_link', action='store_true', help='outputs only links with view = Data')
+	
 
 	parser.add_argument('--access_node_prob', dest='access_prob', action='store', default='1', help='probability of a node to be an access node, default = 1')
 
