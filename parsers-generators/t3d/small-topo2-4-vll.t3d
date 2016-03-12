@@ -1,0 +1,430 @@
+ {
+	"vertices": {
+		"cer1": {
+			"pos": {
+				"x": 119,
+				"y": 52.599999999999994
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"peo2": {
+			"pos": {
+				"x": 240.61277445109786,
+				"y": 170.8540145985401
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-PE",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro3": {
+			"pos": {
+				"x": 485.73852295409193,
+				"y": 290.6437956204379
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro4": {
+			"pos": {
+				"x": 821.4297485351565,
+				"y": 159.11499999999998
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro5": {
+			"pos": {
+				"x": 163.67584228515625,
+				"y": 397.13
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"peo6": {
+			"pos": {
+				"x": 778.3692614770463,
+				"y": 411.96934306569335
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-PE",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cer7": {
+			"pos": {
+				"x": 1016,
+				"y": 407
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"ctr8": {
+			"pos": {
+				"x": 463.35448057097545,
+				"y": 74.99405940594059
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OF Controller",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"tcp_port": "6633",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cer9": {
+			"pos": {
+				"x": 1030,
+				"y": 216
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"peo10": {
+			"pos": {
+				"x": 832,
+				"y": 52
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-PE",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cer11": {
+			"pos": {
+				"x": 897,
+				"y": 56
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		}
+	},
+	"edges": {
+		"cer1&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer7&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"peo2&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"peo6&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"ctr8&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer1&&cer7": {
+			"links": [
+				{
+					"id": "",
+					"view": "Vll"
+				}
+			]
+		},
+		"cer9&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"peo10&&cro4": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer11&&peo10": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer11&&cer1": {
+			"links": [
+				{
+					"id": "",
+					"view": "Vll"
+				}
+			]
+		},
+		"cer1&&cer9": {
+			"links": [
+				{
+					"id": "",
+					"view": "Vll"
+				}
+			]
+		},
+		"cer11&&cer9": {
+			"links": [
+				{
+					"id": "",
+					"view": "Vll"
+				}
+			]
+		}
+	},
+	"graph_parameters": {
+		"tunneling": "OPENVPN",
+		"vlan": "0",
+		"mapped": false,
+		"generated": false,
+		"testbed": "MININET"
+	}
+}

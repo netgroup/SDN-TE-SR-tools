@@ -62,6 +62,9 @@ n_nodi_core = 0
 n_nodi_di_bordo = 0
 FLOW_CATALOGUE_FILENAME = 'flow_catalogue.json'
 
+VLL_TOKEN_IN_T3D = 'Vll'
+DATA_TOKEN_IN_T3D = 'Data'
+PW_TOKEN_IN_T3D = 'PW'
 
 def set_weights_on_available_capa(BIGK, nx_multidigraph):
 	"""Set the links weights considering the availale capcity and the allocated capacity"""
@@ -71,7 +74,7 @@ def set_weights_on_available_capa(BIGK, nx_multidigraph):
 	return
 
 def multidigraph_from_flow_catalogue (fc_dict):
-	"""Transform the catolgue of the flows in a nx multidigraph"""
+	"""Transform the catalogue of the flows in a nx multidigraph"""
 
 	nx_flows = nx.MultiDiGraph()
 	for flow_id, (src, dst, flow_dict) in fc_dict.iteritems():
@@ -214,13 +217,34 @@ def flow_allocator(ctrl_endpoint):
 	# Pushes the flows
 	flow_pusher(nx_topology, flow_catalogue, nx_flows, ctrl_endpoint)
 
+def extracts_links(nx_topology_new, my_key, my_value):
+	""" extracts the links in a nx multidigraph that match the filter
+	returns a new nx multidigraph, the one in input is not changed
+	"""
+	output_nx = nx.MultiDiGraph()
+
+	for source,dest,key_iter,d in nx_topology_new.edges_iter(data=True,keys=True):
+		#print nx_topology_new[source][dest][key]
+		if my_key in nx_topology_new[source][dest][key_iter]:
+			if nx_topology_new[source][dest][key_iter][my_key]== my_value:
+				output_nx.add_edge(source, dest, key=key_iter)
+				output_nx[source][dest][key_iter] = nx_topology_new[source][dest][key_iter]
+			else:
+				#do nothing
+				pass
+		else:
+				#do nothing
+				pass
+	return output_nx			
+
+
 def filter_links(nx_topology_new, my_key, my_value):
 	""" filter the links in a nx multidigraph, keeping only the ones that match the filter
-
+	operates on the multidigraph given in input
 	"""
 	remove = []
 	for source,dest,key,d in nx_topology_new.edges_iter(data=True,keys=True):
-		print nx_topology_new[source][dest][key]
+		#print nx_topology_new[source][dest][key]
 		if my_key in nx_topology_new[source][dest][key]:
 			if nx_topology_new[source][dest][key][my_key]== my_value:
 				#do nothing
@@ -231,7 +255,7 @@ def filter_links(nx_topology_new, my_key, my_value):
 				remove.append([source,dest,key])
 
 	for source,dest,key in remove:
-		print "DELETED : ",source,dest,key
+		#print "DELETED : ",source,dest,key
 		del nx_topology_new[source][dest][key]
 
 
@@ -269,6 +293,21 @@ def print_info(nx_topology_new):
 	    float(nx_topology_new.number_of_edges())/nx_topology_new.number_of_nodes(), \
 	    ")"
 	
+def	generate_flow_cata(nx_topology_links, outfile_name):
+	flow_cata = {}
+	for source,dest,key_iter,d in nx_topology_links.edges_iter(data=True,keys=True):
+
+		flow_id = get_id()
+		size_out = ''
+		size_in = ''
+		flow_type = 'vll'
+		flow_cata[flow_id]=(source,dest,{'id': flow_id, 'out':{'path': [], 'size': size_out, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type': flow_type},'in':{'path': [], 'size': size_in, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type': flow_type}})
+
+	with open(outfile_name, 'w') as outfile:
+		json.dump(flow_cata, outfile, indent=4, sort_keys=True)
+		outfile.close()		
+
+
 
 def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
 	for index in nx_multidigraph[lhs][rhs]:
@@ -378,7 +417,20 @@ def run_command(args_in):
 
 		if args_in.filters_only_data_link:
 			print "filtered only links with view = Data"
-			filter_links(nx_topology_new, 'view', 'Data')
+			filter_links(nx_topology_new, 'view', DATA_TOKEN_IN_T3D)
+
+		if args_in.generate_vll_pw_flow_cata:
+			#only vll catalogue is considered
+			vll_list = extracts_links(nx_topology_new, 'view', VLL_TOKEN_IN_T3D) 
+			if vll_list.size() > 0:
+				generate_flow_cata (vll_list, 'flow_cata_vll.json')
+				print "serialized vll_list in flow_cata_vll.json"
+
+			pw_list = extracts_links(nx_topology_new, 'view', PW_TOKEN_IN_T3D) 
+			if pw_list.size() > 0:
+				generate_flow_cata (pw_list, 'flow_cata_pw.json')
+				print "serialized pw_list in flow_cata_pw.json"
+
 
 		#output the links.json and node.json
 		serialize(nx_topology_new)
@@ -395,7 +447,9 @@ def run_command(args_in):
 
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d 
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out nx --select_edge_nodes --generate_demands --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10  
-# python parse_transform_generate.py --f t3d/small-topology.t3d --in t3d --out nx --filters_only_data_link
+# python parse_transform_generate.py --f t3d/small-topology.t3d --in t3d --out nx --filters_only_data_link --generate_vll_pw_flow_cata
+# python parse_transform_generate.py --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_vll_pw_flow_cata
+
 
 
 def parse_cmd_line():
@@ -407,7 +461,7 @@ def parse_cmd_line():
 	parser.add_argument('--generate_demands', dest='generate_demands', action='store_true', help='used to generate the traffic demands')
 	parser.add_argument('--select_edge_nodes', dest='select_edge_nodes', action='store_true', help='marks edge nodes (needed to generate the traffic demands)')
 	parser.add_argument('--filters_only_data_link', dest='filters_only_data_link', action='store_true', help='outputs only links with view = Data')
-	
+	parser.add_argument('--generate_vll_pw_flow_cata', dest='generate_vll_pw_flow_cata', action='store_true', help='generates flowcata of vll and pw')
 
 	parser.add_argument('--access_node_prob', dest='access_prob', action='store', default='1', help='probability of a node to be an access node, default = 1')
 

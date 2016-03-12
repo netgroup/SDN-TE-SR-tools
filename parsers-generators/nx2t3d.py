@@ -58,6 +58,8 @@ def nx_2_t3d_dict(nx_topology_new, defa_node_type="", defa_link_type="", add_lin
 	if defa_link_type is !="" adds a default link type
 	if add_link_id is True, if there is no LINK_ID_KEY adds a unique link_id for each link (the id is unique among all links in the graph)
 	the unique link is taken from the key that identifies the link among the multilinks, but it is checked that it is unique
+
+	OPEN ISSUE: HOW DOES IT CONVERT THE UNIDIRECTIONAL LINKS IN THE MultiDiGraph INTO THE BIDIRECTIONAL LINKS IN T3D????
 	"""
 
 

@@ -1,0 +1,313 @@
+{
+	"vertices": {
+		"cer1": {
+			"pos": {
+				"x": 121.30000000000001,
+				"y": 51.8
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"peo2": {
+			"pos": {
+				"x": 245.26327345309386,
+				"y": 168.2554744525547
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-PE",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro3": {
+			"pos": {
+				"x": 495.12674650698614,
+				"y": 286.22335766423356
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro4": {
+			"pos": {
+				"x": 837.3061218261721,
+				"y": 156.695
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cro5": {
+			"pos": {
+				"x": 166.83932495117188,
+				"y": 391.09
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-CR",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"peo6": {
+			"pos": {
+				"x": 793.4133732534933,
+				"y": 405.7036496350364
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OSHI-PE",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"loopback": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"cer7": {
+			"pos": {
+				"x": 1091.7,
+				"y": 466.2
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "CE",
+				"property": {
+					"custom_label": "",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		},
+		"ctr8": {
+			"pos": {
+				"x": 472.3100713719271,
+				"y": 73.85346534653465
+			},
+			"v": {
+				"x": 0,
+				"y": 0
+			},
+			"info": {
+				"frozen": false,
+				"type": "OF Controller",
+				"property": {
+					"custom_label": "",
+					"domain-oshi": {
+						"layer-Control": {
+							"cluster_id": ""
+						}
+					},
+					"tcp_port": "6633",
+					"vm": {
+						"interfaces": "",
+						"mgt_ip": ""
+					}
+				}
+			}
+		}
+	},
+	"edges": {
+		"cer1&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer7&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro4&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&peo2": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&peo6": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cro5&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"peo2&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"peo6&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"ctr8&&cro3": {
+			"links": [
+				{
+					"id": "",
+					"view": "Data"
+				}
+			]
+		},
+		"cer1&&cer7": {
+			"links": [
+				{
+					"id": "",
+					"view": "Vll"
+				}
+			]
+		}
+	},
+	"graph_parameters": {
+		"tunneling": "OPENVPN",
+		"vlan": "0",
+		"mapped": false,
+		"generated": false,
+		"testbed": "MININET"
+	}
+}
