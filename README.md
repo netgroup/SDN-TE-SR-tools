@@ -19,9 +19,15 @@ We consider two examples:
 
 In this example we parse a topology generated with Topology3D GUI, extract the set of flows (Virtual Leased Lines), allocate a Segment Routing path for each flow and then deploy the SR path on the Mininet emulator that emulates the topology.
 
+* In the Topology3D GUI load the example topology: from the top bar "Topology" menu, select "Import topology from file"
+Choose the file /home/user/workspace/sdn-te-sr-tools/parsers-generators/t3d/small-topo2-4-vll.t3d
+* Deploy the topology: In the left frame, from the Deployment menu, select Deploy.
+In the deployment window on the bottom, type deploy and then press enter.
+* Identify the controller IP address from the output of the deployment script
+* Generates the flow catalogue to be handed over to the SR allocation algorithm (properly replace the controller IP address)
 ```
 $ cd /home/user/workspace/sdn-te-sr-tools/parsers-generators
-$ python parse_transform_generate.py --f t3d/small-topology.t3d --in t3d --out nx --filters_only_data_link
+$ python parse_transform_generate.py --controller 10.255.248.1:8080 --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_flow_cata_from_vll_pusher_cfg 
 ```
 
 ### Large scale topology (no actual Segment Routing paths deployment in the emulator)
