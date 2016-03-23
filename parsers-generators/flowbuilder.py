@@ -24,6 +24,7 @@ class FlowBuilder:
 
 	def __init__(self, controller_address):
 		self.controller_address = controller_address
+		print "initialized FlowBuilder with address : ", controller_address
 		self.flow_catalogue = {}
 		self.pusher_cfg = {}
 		# 100 Kb/s
@@ -77,8 +78,15 @@ class FromFileBuilder(FlowBuilder):
 
 		intf_to_port_number = {}
 
-		command = "curl -s http://%s/v1.0/topology/switches | python -mjson.tool" % (self.controller_address)
+		#command = "curl -s http://%s/v1.0/topology/switches | python -mjson.tool" % (self.controller_address)
+		command = "curl -s http://%s/v1.0/topology/switches --max-time 30" % (self.controller_address)
 		result = os.popen(command).read()
+		if result != "":
+			pass
+		else:
+			print "Unable to get topology from controller at address: %s" % self.controller_address
+			sys.exit(-2)	
+
 		parsedResult = json.loads(result)
 		default = None
 		
