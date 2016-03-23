@@ -54,6 +54,7 @@ from graphml2nx_ste import *
 from nx2t3d import *
 from nx2json import *
 from demand_gen_ste import *
+from flowbuilder import *
 
 
 CONFIDENCE = 5
@@ -152,6 +153,7 @@ print(nx_topology.edge[2])   # Print the adjancies of the node 2
 
 def retrieve_flows(controllerRestIP):
 	"""Retrieves the flows from the vll_pusher.cfg and generates the flow_catalogue
+	Stefano 2016-03-22: it looks like this method is outdated
 	"""
 
 	global pusher_cfg
@@ -293,20 +295,31 @@ def print_info(nx_topology_new):
 	    float(nx_topology_new.number_of_edges())/nx_topology_new.number_of_nodes(), \
 	    ")"
 	
-def	generate_flow_cata(nx_topology_links, outfile_name):
+def	generate_flow_cata(nx_topology_links, flow_type, outfile_name):
+	""" generates the flow catalogue file from a set of nx links
+	it does not contact the controller, so no port information are added in the catalogue
+	"""
 	flow_cata = {}
 	for source,dest,key_iter,d in nx_topology_links.edges_iter(data=True,keys=True):
 
 		flow_id = get_id()
 		size_out = ''
 		size_in = ''
-		flow_type = 'vll'
 		flow_cata[flow_id]=(source,dest,{'id': flow_id, 'out':{'path': [], 'size': size_out, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type': flow_type},'in':{'path': [], 'size': size_in, 'allocated': False, 'srcPort': '', 'dstPort':'', 'type': flow_type}})
 
 	with open(outfile_name, 'w') as outfile:
 		json.dump(flow_cata, outfile, indent=4, sort_keys=True)
 		outfile.close()		
 
+def	generate_flow_cata_with_ports(controller_ip_port):
+	""" generates the flow catalogue file from for the vll_pusher.cfg 
+	it contacts the controller, so that port information are added in the catalogue
+	"""
+	factory = FlowBuilderFactory()
+	builder = factory.getFlowBuilder("from_file", "controller_ip_port")
+	builder.parseJsonToFC()
+	#builder.cataloguePrint()
+	builder.serialize()
 
 
 def retrieve_link_from_id(nx_multidigraph, lhs, rhs, flow_id):
@@ -419,22 +432,25 @@ def run_command(args_in):
 			print "filtered only links with view = Data"
 			filter_links(nx_topology_new, 'view', DATA_TOKEN_IN_T3D)
 
+		#output the links.json and node.json
+		serialize(nx_topology_new)
+		print "serialized topology in links.json and node.json"
+
 		if args_in.generate_vll_pw_flow_cata:
 			#only vll catalogue is considered
 			vll_list = extracts_links(nx_topology_new, 'view', VLL_TOKEN_IN_T3D) 
 			if vll_list.size() > 0:
-				generate_flow_cata (vll_list, 'flow_cata_vll.json')
+				generate_flow_cata (vll_list, flow_type = 'vll', outfile_name = 'flow_cata_vll.json')
 				print "serialized vll_list in flow_cata_vll.json"
 
 			pw_list = extracts_links(nx_topology_new, 'view', PW_TOKEN_IN_T3D) 
 			if pw_list.size() > 0:
-				generate_flow_cata (pw_list, 'flow_cata_pw.json')
+				generate_flow_cata (pw_list, flow_type = 'pw', outfile_name = 'flow_cata_pw.json')
 				print "serialized pw_list in flow_cata_pw.json"
 
+		if args_in.generate_flow_cata_from_vll_pusher_cfg:
+			generate_flow_cata_with_ports(args_in.controllerRestIp)
 
-		#output the links.json and node.json
-		serialize(nx_topology_new)
-		print "serialized topology in links.json and node.json"
 
 
 
@@ -445,23 +461,30 @@ def run_command(args_in):
 
 	#flow_allocator(args.controllerRestIp)
 
+# 1) transforms a topology from graphml to topology3d 
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out t3d 
+# 2) use a graphml topology and generates demands (selecting a subset of nodes as edge nodes), outputs links and nodes (nx model) and flow catalogue
 # python parse_transform_generate.py --f graphml/Colt_2010_08-153N.graphml --in graphml --out nx --select_edge_nodes --generate_demands --access_node_prob 0.4 --t_rel_prob 0.2 --mean_num_flows 4 --max_num_flows 10 --link__to_t_rel_ratio 10  
+# 3.1) use a topology3d topology, outputs links and nodes (nx model) and two flow catalogues, one for vll and one for pseudo wires
 # python parse_transform_generate.py --f t3d/small-topology.t3d --in t3d --out nx --filters_only_data_link --generate_vll_pw_flow_cata
-# python parse_transform_generate.py --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_vll_pw_flow_cata
+# 3.2) same as above, with a different topology3d used in input
+# 4) python parse_transform_generate.py --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_vll_pw_flow_cata
+# python parse_transform_generate.py --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_flow_cata_from_vll_pusher_cfg --controller 10.255.245.1:8080
 
 
 
 def parse_cmd_line():
 	parser = argparse.ArgumentParser(description="Parses and transforms topologies between different formats - Generates traffic demands")
-	#parser.add_argument('--controller', dest='controllerRestIp', action='store', default='localhost:8080', help='controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
+	parser.add_argument('--controller', dest='controllerRestIp', action='store', default='', help='used to connect to the controller and obtain the port numbers --controller IP:RESTport, e.g., localhost:8080 or A.B.C.D:8080')
 	parser.add_argument('--f', dest='file', action='store', help='input file to parse')
 	parser.add_argument('--in', dest='file_type_in', action='store', default='graphml', help='type of input file, default = graphml, options = t3d, nx')
 	parser.add_argument('--out', dest='file_type_out', action='store', default='t3d', help='type of output file, default = t3d, options = nx')
 	parser.add_argument('--generate_demands', dest='generate_demands', action='store_true', help='used to generate the traffic demands')
 	parser.add_argument('--select_edge_nodes', dest='select_edge_nodes', action='store_true', help='marks edge nodes (needed to generate the traffic demands)')
 	parser.add_argument('--filters_only_data_link', dest='filters_only_data_link', action='store_true', help='outputs only links with view = Data')
-	parser.add_argument('--generate_vll_pw_flow_cata', dest='generate_vll_pw_flow_cata', action='store_true', help='generates flowcata of vll and pw')
+	parser.add_argument('--generate_vll_pw_flow_cata', dest='generate_vll_pw_flow_cata', action='store_true', help='generates flowcata of vll and pw from t3d file')
+	parser.add_argument('--generate_flow_cata_from_vll_pusher_cfg', dest='generate_flow_cata_from_vll_pusher_cfg', action='store_true', help='generates flow catalogue from vll_pusher.cfg')
+
 
 	parser.add_argument('--access_node_prob', dest='access_prob', action='store', default='1', help='probability of a node to be an access node, default = 1')
 

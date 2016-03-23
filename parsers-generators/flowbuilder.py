@@ -5,12 +5,15 @@ import random
 import networkx as nx
 import siphash
 
+VLL_PUSHER_FILE_NAME = "../../Dreamer-Mininet-Extensions/vll_pusher.cfg"
+FLOW_CATA_FILE_NAME = "flow_catalogue.json"
+
 class FlowBuilderFactory:
 
-	# For from_file, data is the ctrl endpoint; For random generation...
-	def getFlowBuilder(self, builder_type, data):
+	# For from_file, controller_address is the ctrl endpoint; For random generation...
+	def getFlowBuilder(self, builder_type, controller_address):
 		if builder_type == "from_file":
-			return FromFileBuilder(data)
+			return FromFileBuilder(controller_address)
 		elif builder_type == "random":
 			return None
 		else:
@@ -19,8 +22,8 @@ class FlowBuilderFactory:
 
 class FlowBuilder:
 
-	def __init__(self, data):
-		self.data = data
+	def __init__(self, controller_address):
+		self.controller_address = controller_address
 		self.flow_catalogue = {}
 		self.pusher_cfg = {}
 		# 100 Kb/s
@@ -40,11 +43,11 @@ class FlowBuilder:
 
 class FromFileBuilder(FlowBuilder): 
         
-	def __init__(self, data):
-		FlowBuilder.__init__(self, data)
+	def __init__(self, controller_address):
+		FlowBuilder.__init__(self, controller_address)
 		    
 	def parseJsonToFC(self):
-		path = "vll_pusher.cfg"
+		path = VLL_PUSHER_FILE_NAME
 		if os.path.exists(path):
 				conf = open(path,'r')
 				self.pusher_cfg = json.load(conf)
@@ -74,7 +77,7 @@ class FromFileBuilder(FlowBuilder):
 
 		intf_to_port_number = {}
 
-		command = "curl -s http://%s/v1.0/topology/switches | python -mjson.tool" % (self.data)
+		command = "curl -s http://%s/v1.0/topology/switches | python -mjson.tool" % (self.controller_address)
 		result = os.popen(command).read()
 		parsedResult = json.loads(result)
 		default = None
@@ -140,6 +143,6 @@ class FromFileBuilder(FlowBuilder):
 		return nx_flows
 
 	def serialize(self):
-		with open('flow_catalogue.json', 'w') as outfile:
+		with open(FLOW_CATA_FILE_NAME, 'w') as outfile:
 			json.dump(self.flow_catalogue, outfile, indent=4, sort_keys=True)
 			outfile.close()
