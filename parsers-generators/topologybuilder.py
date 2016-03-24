@@ -264,77 +264,92 @@ class RyuTopologyBuilder(CtrlTopologyBuilder):
 		CtrlTopologyBuilder.__init__(self, controller)
 		    
 	def parseJsonToNx(self):
-			#command = "curl -s http://"+self.IpPort+"/v1.0/topology/links | python -mjson.tool" 
-			command = "curl --max-time 30 -s http://"+self.IpPort+"/v1.0/topology/links" 
+			command = "curl --max-time 30 -s http://"+self.IpPort+"/stats/switches"
 			result = os.popen(command).read()
-			#command = "curl -s http://"+self.IpPort+"/stats/portdesc | python -mjson.tool"
-			command = "curl --max-time 30 -s http://"+self.IpPort+"/stats/portdesc"
-			result2 = os.popen(command).read()
-			#print "result : ", result
-			#print "result2 : ", result2
-
-			if result != "" and result2 != "":
+			if result != "":
 				try:
-					self.topology = json.loads(result)
-					self.ports = json.loads(result2)
+					switches = json.loads(result)
 				except ValueError: 
 					print 'Decoding JSON has failed'
 					print "Error: something does not work in getting info from ryu controller"
 					sys.exit(-2)
 
-				self.nx_topology = nx.MultiDiGraph()
-				self.nx_topology.clear()
+				for switch in switches:
+					command = "curl --max-time 30 -s http://"+self.IpPort+"/stats/portdesc/"+str(switch)
+					result = os.popen(command).read()
+					if result != "":
+						try:
+							switch_ports = json.loads(result)
+						except ValueError: 
+							print 'Decoding JSON has failed'
+							print "Error: something does not work in getting info from ryu controller"
+							sys.exit(-2)
+						self.ports[str(switch)] = switch_ports[str(switch)]
 
-				index = 0
+				command = "curl --max-time 30 -s http://"+self.IpPort+"/v1.0/topology/links" 
+				result = os.popen(command).read()
 
-				for link in self.topology:
-					src = link['src']['dpid']
-					dst = link['dst']['dpid']
-					src_port = link['src']['name']
-					dst_port = link['dst']['name']
-					src_port_no = link['src']['port_no']
-					dst_port_no = link['dst']['port_no']
-					src_mac = link['src']['hw_addr'].replace(":","")
-					dst_mac = link['dst']['hw_addr'].replace(":","")				
+				if result != "":
+					try:
+						self.topology = json.loads(result)
+					except ValueError: 
+						print 'Decoding JSON has failed'
+						print "Error: something does not work in getting info from ryu controller"
+						sys.exit(-2)
 
-					src_capacity = 0.0
-					src_ports = self.ports[str(int(src,16))]
-					for port in src_ports:
-						if port['name'] == src_port:
-							src_capacity = int(port['curr_speed'])/1000						
-							break
-					if src_capacity == 0.0:
-						print "Error - SRC Capacity cannot be 0.0"
-						sys.exit(-1)
-				
-					dst_capacity = 0.0
-					dst_ports = self.ports[str(int(dst,16))]
-					for port in dst_ports:
-						if port['name'] == dst_port:
-							dst_capacity = int(port['curr_speed'])/1000						
-							break
-					if dst_capacity == 0.0:
-						print "Error - DST Capacity cannot be 0.0"
-						sys.exit(-1)
+					self.nx_topology = nx.MultiDiGraph()
+					self.nx_topology.clear()
 
-					if src_capacity <= dst_capacity:
-						capacity = src_capacity
-					else:
-						capacity = dst_capacity	
+					index = 0
 
-					if capacity >= self.max_capacity:
-						self.max_capacity = capacity		
+					for link in self.topology:
+						src = link['src']['dpid']
+						dst = link['dst']['dpid']
+						src_port = link['src']['name']
+						dst_port = link['dst']['name']
+						src_port_no = link['src']['port_no']
+						dst_port_no = link['dst']['port_no']
+						src_mac = link['src']['hw_addr'].replace(":","")
+						dst_mac = link['dst']['hw_addr'].replace(":","")				
 
-					self.sip.update(str(index))
-					id_ = str(self.sip.hash())
+						src_capacity = 0.0
+						src_ports = self.ports[str(int(src,16))]
+						for port in src_ports:
+							if port['name'] == src_port:
+								src_capacity = int(port['curr_speed'])/1000						
+								break
+						if src_capacity == 0.0:
+							print "Error - SRC Capacity cannot be 0.0"
+							sys.exit(-1)
+					
+						dst_capacity = 0.0
+						dst_ports = self.ports[str(int(dst,16))]
+						for port in dst_ports:
+							if port['name'] == dst_port:
+								dst_capacity = int(port['curr_speed'])/1000						
+								break
+						if dst_capacity == 0.0:
+							print "Error - DST Capacity cannot be 0.0"
+							sys.exit(-1)
 
-					self.nx_topology.add_edge(src, dst, capacity=capacity, allocated=0.0, src_port=src_port, dst_port=dst_port, src_port_no=src_port_no, dst_port_no=dst_port_no, src_mac=src_mac, dst_mac=dst_mac, flows=[], id=id_) 
+						if src_capacity <= dst_capacity:
+							capacity = src_capacity
+						else:
+							capacity = dst_capacity	
 
-					index = index + 1
+						if capacity >= self.max_capacity:
+							self.max_capacity = capacity		
 
-			else:
-				print "Error: something does not work in getting info from ryu controller"
-				sys.exit(-2)
+						self.sip.update(str(index))
+						id_ = str(self.sip.hash())
+
+						self.nx_topology.add_edge(src, dst, capacity=capacity, allocated=0.0, src_port=src_port, dst_port=dst_port, src_port_no=src_port_no, dst_port_no=dst_port_no, src_mac=src_mac, dst_mac=dst_mac, flows=[], id=id_) 
+
+						index = index + 1
+
+				else:
+					print "Error: something does not work in getting info from ryu controller"
+					sys.exit(-2)
 
 	def serialize(self):
 

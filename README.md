@@ -52,6 +52,7 @@ flows_out=flow/flow_catalogue.json.out
 
 # Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
 $ mv flow_catalogue.json.out ../OSHI-SR-pusher/out_flow_catalogue.json
+$ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 
 ### Large scale topology (no actual Segment Routing paths deployment in the emulator)
 
