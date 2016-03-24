@@ -213,6 +213,7 @@ class CtrlTopologyBuilder:
 	def __init__(self, controller):
 
 		self.IpPort = controller
+		print "initialized TopologyBuilder with address : ", controller
 		self.topology = {}
 		self.nodes = []
 		self.ports = {}
@@ -245,7 +246,8 @@ class FloodlightTopologyBuilder(CtrlTopologyBuilder):
 		CtrlTopologyBuilder.__init__(self, controller)
 		    
 	def parseJsonToNx(self):
-			command = "curl -s http://"+self.IpPort+"/wm/topology/links/json | python -mjson.tool" 
+			#command = "curl -s http://"+self.IpPort+"/wm/topology/links/json | python -mjson.tool" 
+			command = "curl --max-time 30 -s http://"+self.IpPort+"/wm/topology/links/json" 
 			result = os.popen(command).read()
 			if result != "":
 				self.topology = json.loads(result)
@@ -262,14 +264,24 @@ class RyuTopologyBuilder(CtrlTopologyBuilder):
 		CtrlTopologyBuilder.__init__(self, controller)
 		    
 	def parseJsonToNx(self):
-			command = "curl -s http://"+self.IpPort+"/v1.0/topology/links | python -mjson.tool" 
+			#command = "curl -s http://"+self.IpPort+"/v1.0/topology/links | python -mjson.tool" 
+			command = "curl --max-time 30 -s http://"+self.IpPort+"/v1.0/topology/links" 
 			result = os.popen(command).read()
-			command = "curl -s http://"+self.IpPort+"/stats/portdesc | python -mjson.tool"
+			#command = "curl -s http://"+self.IpPort+"/stats/portdesc | python -mjson.tool"
+			command = "curl --max-time 30 -s http://"+self.IpPort+"/stats/portdesc"
 			result2 = os.popen(command).read()
+			#print "result : ", result
+			#print "result2 : ", result2
 
 			if result != "" and result2 != "":
-				self.topology = json.loads(result)
-				self.ports = json.loads(result2)
+				try:
+					self.topology = json.loads(result)
+					self.ports = json.loads(result2)
+				except ValueError: 
+					print 'Decoding JSON has failed'
+					print "Error: something does not work in getting info from ryu controller"
+					sys.exit(-2)
+
 				self.nx_topology = nx.MultiDiGraph()
 				self.nx_topology.clear()
 
@@ -321,7 +333,7 @@ class RyuTopologyBuilder(CtrlTopologyBuilder):
 					index = index + 1
 
 			else:
-				print "Error something does not work"
+				print "Error: something does not work in getting info from ryu controller"
 				sys.exit(-2)
 
 	def serialize(self):
