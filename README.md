@@ -38,6 +38,20 @@ $ python parse_transform_generate.py --controller 10.255.248.1:8080 --f t3d/smal
 ```
 $ cat flow_catalogue.json
 ```
+* Run allocation algorithm
+# move the files previously generated in topology and flows folders of java-te-sr project
+$ mv flow_catalogue.json ../java-te-sr/flow/
+$ mv links.json ../java-te-sr/topology/
+$ mv nodes.json ../java-te-sr/topology/
+
+# Open Eclipse, set Main parameters and run as application
+topo_in=topology/links.json
+topo_out=topology/links.json.out
+flows_in=flow/flow_catalogue.json
+flows_out=flow/flow_catalogue.json.out
+
+# Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
+$ mv flow_catalogue.json.out ../OSHI-SR-pusher/out_flow_catalogue.json
 
 ### Large scale topology (no actual Segment Routing paths deployment in the emulator)
 

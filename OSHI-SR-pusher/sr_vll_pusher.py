@@ -95,6 +95,10 @@ def add_command(args):
 		if vllExists == True:
 			continue
 
+		if not out_['allocated'] or not in_['allocated']:
+			print "Vll %s not completely allocated Skip" % id_
+			continue
+
 		temp_sw_port_label = {}
 
 		value = sw_port_label.get(out_path[len(out_path)-1], default_label_value)
