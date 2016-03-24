@@ -79,7 +79,7 @@ class FromFileBuilder(FlowBuilder):
 		intf_to_port_number = {}
 
 		#command = "curl -s http://%s/v1.0/topology/switches | python -mjson.tool" % (self.controller_address)
-		command = "curl -s http://%s/v1.0/topology/switches --max-time 30" % (self.controller_address)
+		command = "curl --max-time 30 -s http://%s/v1.0/topology/switches" % (self.controller_address)
 		result = os.popen(command).read()
 		if result != "":
 			pass
