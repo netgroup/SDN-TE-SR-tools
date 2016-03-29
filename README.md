@@ -32,7 +32,7 @@ $ ssh -X root@10.255.245.1
 * Generates the flow catalogue to be handed over to the SR allocation algorithm (properly replace the controller IP address), from a second console in your VM:
 ```
 $ cd /home/user/workspace/sdn-te-sr-tools/parsers-generators
-$ python parse_transform_generate.py --controller 10.255.248.1:8080 --f t3d/small-topo2-4-vll.t3d --in t3d --out nx --filters_only_data_link --generate_flow_cata_from_vll_pusher_cfg 
+$ python parse_transform_generate.py --in ctrl_ryu --out nx --generate_flow_cata_from_vll_pusher_cfg --controller 10.255.245.1:8080 
 ```
 * Check the generated flow catalogue
 ```
