@@ -44,7 +44,7 @@ $ mv flow_catalogue.json ../java-te-sr/flow/
 $ mv links.json ../java-te-sr/topology/
 $ mv nodes.json ../java-te-sr/topology/
 ```
-* Run allocation algorith: Open Eclipse, set Main parameters and run as application 
+* Run allocation algorithm: Open Eclipse, set Main parameters and run as application 
 ```
 topo_in=topology/links.json
 topo_out=topology/links.json.out
