@@ -26,23 +26,29 @@ In the deployment window on the bottom, type deploy and then press enter.
 * Identify the controller IP address from the output of the deployment script and run the controller from a console in your VM (root password is "root"):
 ```
 $ ssh -X root@10.255.245.1
+# ./ryu_start.sh
+```
+(or manually:)
+```
 # cd /home/user/workspace/dreamer-ryu/ryu/app
 # ryu-manager rest_topology.py ofctl_rest.py --observe-links
 ```
-* Generates the flow catalogue to be handed over to the SR allocation algorithm (properly replace the controller IP address), from a second console in your VM:
+* Generates the flow catalogue to be handed over to the SR allocation algorithm (properly replace the controller IP address), from a second console in your VM, then move the files in topology and flows folders of java-te-sr project
+```
+$ cd /home/user/workspace/Mantoo-scripts-and-readme
+$ ./generate_topo_and_flow_cata 10.255.245.1:8080
+```
+(or manually:)
 ```
 $ cd /home/user/workspace/sdn-te-sr-tools/parsers-generators
 $ python parse_transform_generate.py --in ctrl_ryu --out nx --generate_flow_cata_from_vll_pusher_cfg --controller 10.255.245.1:8080 
-```
-* Check the generated flow catalogue
-```
-$ cat flow_catalogue.json
-```
-* move the files previously generated in topology and flows folders of java-te-sr project
-```
 $ mv flow_catalogue.json ../java-te-sr/flow/
 $ mv links.json ../java-te-sr/topology/
 $ mv nodes.json ../java-te-sr/topology/
+```
+* Check the generated flow catalogue
+```
+$ cat /home/user/workspace/sdn-te-sr-tools/parsers-generators/flow_catalogue.json
 ```
 * Run the SR allocation algorithm
  * Open Eclipse (from the Applications Menu at the top left, select Development->Eclipse)
@@ -57,9 +63,15 @@ flows_out=flow/flow_catalogue.json.out
 
 * Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
 ```
+$ cd /home/user/workspace/Mantoo-scripts-and-readme
+$ ./sr_pusher_start.sh 10.255.245.1:8080 --add
+```
+(or manually:)
+```
 $ cd /home/user/workspace/sdn-te-sr-tools
 $ mv java-te-sr/flow/flow_catalogue.json.out OSHI-SR-pusher/out_flow_catalogue.json
 $ cd /home/user/workspace/sdn-te-sr-tools/OSHI-SR-pusher/
+$ rm sr_vlls.json
 $ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 ```
 
