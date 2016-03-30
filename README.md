@@ -45,16 +45,21 @@ $ mv links.json ../java-te-sr/topology/
 $ mv nodes.json ../java-te-sr/topology/
 ```
 * Run the SR allocation algorithm
- * Open Eclipse, set Main parameters and run as application 
+ * Open Eclipse (from the Applications Menu at the top left, select Development->Eclipse)
+ * set Main parameters (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, in the Arguments tab edit the Program arguments as follows) 
 ```
 topo_in=topology/links.json
 topo_out=topology/links.json.out
 flows_in=flow/flow_catalogue.json
 flows_out=flow/flow_catalogue.json.out
 ```
+ * Run (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, click the Run button at the right bottom NB the Main class should be it.unipr.netsec.sdn.run.Main)
+
 * Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
 ```
-$ mv flow_catalogue.json.out ../OSHI-SR-pusher/out_flow_catalogue.json
+$ cd /home/user/workspace/sdn-te-sr-tools
+$ mv java-te-sr/flow/flow_catalogue.json.out OSHI-SR-pusher/out_flow_catalogue.json
+$ cd /home/user/workspace/sdn-te-sr-tools/OSHI-SR-pusher/
 $ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 ```
 
