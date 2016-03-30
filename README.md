@@ -19,7 +19,7 @@ We consider two examples:
 
 In this example we parse a topology generated with Topology3D GUI, extract the set of flows (Virtual Leased Lines), allocate a Segment Routing path for each flow and then deploy the SR path on the Mininet emulator that emulates the topology.
 
-* Set OSHI.SR = True in nodes.py of the project Dreamer-Mininet-Extensions (Line 108)
+* Set ENABLE_SEGMENT_ROUTING = True in nodes.py of the project Dreamer-Mininet-Extensions (Line 32)
 * In the Topology3D GUI load the example topology: from the top bar "Topology" menu, select "Import topology from file"
 Choose the file /home/user/workspace/sdn-te-sr-tools/parsers-generators/t3d/small-topo2-4-vll.t3d
 * Deploy the topology: In the left frame, from the Deployment menu, select Deploy.
@@ -37,7 +37,7 @@ $ ssh -X root@10.255.245.1
 * Generates the flow catalogue to be handed over to the SR allocation algorithm (properly replace the controller IP address), from a second console in your VM, then move the files in topology and flows folders of java-te-sr project
 ```
 $ cd /home/user/workspace/Mantoo-scripts-and-readme
-$ ./generate_topo_and_flow_cata 10.255.245.1:8080
+$ ./generate_topo_and_flow_cata.sh 10.255.245.1:8080
 ```
 (or manually:)
 ```
@@ -60,7 +60,7 @@ topo_out=topology/links.json.out
 flows_in=flow/flow_catalogue.json
 flows_out=flow/flow_catalogue.json.out
 ```
- * Run (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, click the Run button at the right bottom NB the Main class should be it.unipr.netsec.sdn.run.Main)
+ * Run (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, click the Run button at the right bottom NB the Main class should be it.unipr.netsec.sdn.run.Main) - do not expect any message on the console, if everything is OK nothing is returned
 
 * Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
 ```
@@ -75,6 +75,21 @@ $ cd /home/user/workspace/sdn-te-sr-tools/OSHI-SR-pusher/
 $ rm sr_vlls.json
 $ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 ```
+
+* Now you can ping over a VLL implemented using segment routing. For example ping from cer1 to cer9:
+ * open a shell on cer1 (on the web GUI with CTRL-Left-Click on cer1 or with
+```
+ssh -X root@10.255.247.1
+```
+ * show the interfaces of cer1
+```
+ip a
+```
+ * ping to cer9 on the VLL
+```
+ping 10.0.14.2
+```
+
 
 ### Large scale topology (no actual Segment Routing paths deployment in the emulator)
 
