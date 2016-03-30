@@ -77,7 +77,7 @@ $ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 ```
 
 * Now you can ping over a VLL implemented using segment routing. For example ping from cer1 to cer9:
- * open a shell on cer1 (on the web GUI with CTRL-Left-Click on cer1 or with
+  * open a shell on cer1 (on the web GUI with CTRL-Left-Click on cer1 or with
 ```
 ssh -X root@10.255.247.1
 ```
