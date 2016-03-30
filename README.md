@@ -19,6 +19,7 @@ We consider two examples:
 
 In this example we parse a topology generated with Topology3D GUI, extract the set of flows (Virtual Leased Lines), allocate a Segment Routing path for each flow and then deploy the SR path on the Mininet emulator that emulates the topology.
 
+* Set OSHI.SR = True in nodes.py of the project Dreamer-Mininet-Extensions (Line 108)
 * In the Topology3D GUI load the example topology: from the top bar "Topology" menu, select "Import topology from file"
 Choose the file /home/user/workspace/sdn-te-sr-tools/parsers-generators/t3d/small-topo2-4-vll.t3d
 * Deploy the topology: In the left frame, from the Deployment menu, select Deploy.
