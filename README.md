@@ -60,7 +60,7 @@ topo_out=topology/links.json.out
 flows_in=flow/flow_catalogue.json
 flows_out=flow/flow_catalogue.json.out
 ```
-** Run (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, click the Run button at the right bottom NB the Main class should be it.unipr.netsec.sdn.run.Main) - do not expect any message on the console, if everything is OK nothing is returned
+   * Run (right click on UniPR-SDN-TE-SR project, Run as-> Run Configurations, click the Run button at the right bottom NB the Main class should be it.unipr.netsec.sdn.run.Main) - do not expect any message on the console, if everything is OK nothing is returned
 
 * Move flow_catalogue.json.out to OSHI-SR-pusher and run sr_vll_pusher
 ```
@@ -81,6 +81,7 @@ $ ./sr_vll_pusher.py --controller 10.255.245.1:8080 --add
 ```
 ssh -X root@10.255.247.1
 ```
+*
  * show the interfaces of cer1
 ```
 ip a
