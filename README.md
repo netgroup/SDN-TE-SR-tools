@@ -31,6 +31,7 @@ $ ssh -X root@10.255.245.1
 ```
 (or manually:)
 ```
+$ ssh -X root@10.255.245.1
 # cd /home/user/workspace/dreamer-ryu/ryu/app
 # ryu-manager rest_topology.py ofctl_rest.py --observe-links
 ```
